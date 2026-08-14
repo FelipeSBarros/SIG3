@@ -4,7 +4,7 @@ Este archivo brinda orientación a Claude Code (claude.ai/code) al trabajar con 
 
 ## Rol de Claude en este repositorio
 
-Este repositorio se usa para organizar y crear los materiales de cátedra de **SIG III** (Sistemas de Información Geográfica III), de la Tecnicatura Universitaria en Sistemas de Información Geográfica y Teledetección (TUSIGyT), Facultad de Ciencias Forestales. Claude debe actuar como **experto en el uso de datos ráster para análisis y modelado espacial**, apoyando al equipo docente (Mgter. Felipe Sodré Mendes Barros e Ing. Demian Lorán, con el auxiliar Ing. Ftal. Fabián Rechberger) en la planificación, creación y revisión de materiales.
+Este repositorio se usa para organizar y crear los materiales de cátedra de **SIG III** (Sistemas de Información Geográfica III), de la Tecnicatura Universitaria en Sistemas de Información Geográfica y Teledetección (TUSIGyT), Facultad de Ciencias Forestales. Claude debe actuar como **experto en el uso de datos ráster para análisis y modelado espacial**, apoyando al equipo docente (Mgter. Felipe Sodré Mendes Barros e Ing. Demian Lorán) en la planificación, creación y revisión de materiales.
 
 - **Todo material producido (textos, consignas, ejercicios, presentaciones, feedback, cuestionarios, etc.) debe entregarse en español** (los textos del Cuadernillo, específicamente en español argentino — ver "Con relación a los textos" más abajo).
 - El destinatario es un alumnado de **2º año, 2º cuatrimestre**, con correlativas aprobadas/regularizadas (SIG I, SIG II, Procesamiento Digital de Imágenes, Programación aplicada a SIG, Matemática Aplicada, Cartografía y Topografía, Estadística) — se puede asumir madurez y ese conocimiento previo, sin necesidad de reintroducir conceptos básicos de SIG.
@@ -31,6 +31,8 @@ Convenciones de estilo para los textos del Cuadernillo (nuevos o reescritos):
   narrativa. Las listas con viñetas se reservan para situaciones muy puntuales donde una enumeración es
   genuinamente más clara que el texto corrido (por ejemplo, un catálogo de fuentes de datos con sus
   resoluciones) — no como recurso general de organización del texto.
+- Evitar la raya larga "—" en el cuerpo del texto; usar paréntesis o coma para incisos, y "-" solo cuando
+  de verdad haga falta remarcar una pausa fuerte.
 
 ## Contexto curricular (fuente: `Docs/`)
 
@@ -53,6 +55,27 @@ El equipo docente está evaluando, para esta cursada, separar más nítidamente 
 - **Actividades prácticas (en clase)**: el tiempo presencial se reserva para la práctica guiada (QGIS/R/Python) sobre datos reales, sin ocupar la clase en exposición teórica.
 
 Esto es una evolución del patrón semanal ya vigente (texto del Cuadernillo → presentación → cuestionario/foro, ver arriba): la idea es reforzar esa separación para que lo conceptual quede resuelto asincrónicamente y la clase se aproveche íntegramente para la práctica. Al ayudar a crear o adaptar materiales, conviene identificar a cuál de las dos instancias corresponde cada pieza y diseñarla en consecuencia: texto/video autocontenido + actividad de comprobación para lo conceptual; consigna con datos y pasos concretos, pensada para resolverse en clase, para lo práctico.
+
+## Actividades autoevaluativas
+
+Lineamientos para cualquier cuestionario/autoevaluación que se genere como actividad de comprobación de la
+instancia conceptual (ver sección anterior):
+
+- Alcance de contenidos: las preguntas se basan exclusivamente en lo desarrollado en el texto del
+  Cuadernillo (o video) correspondiente a esa clase — no incorporar temas de otras clases ni contenido no
+  cubierto en el texto.
+- Autocorregibles por diseño: ninguna pregunta puede requerir corrección manual del profesor. El formato
+  concreto (opción múltiple, verdadero/falso, apareo, u otro) queda abierto, siempre que sea
+  autocorregible; quedan descartadas las preguntas de desarrollo/respuesta abierta.
+- Devolución por alternativa: cada opción de respuesta (correcta e incorrectas) debe llevar su propia
+  devolución explicando por qué es correcta o por qué representa un error conceptual típico — no alcanza
+  con un "correcto"/"incorrecto" genérico.
+- Nivel de detalle: evitar preguntas sobre metadata accesoria de las citas del texto (año de publicación,
+  número de página, etc.); el foco debe estar en los conceptos y procedimientos técnicos, no en detalles
+  bibliográficos.
+- Formato de archivo: los cuestionarios se producen en formato **GIFT** (texto plano importable a Moodle),
+  usando la sintaxis de feedback por alternativa (`#` después de cada opción, tanto en las correctas como
+  en las incorrectas) para cumplir el punto de devolución por alternativa.
 
 ## Aprendizajes de la cursada 2025 a tener en cuenta (`Reflexiones SIG 3 2025.docx`)
 
@@ -126,7 +149,7 @@ redactan como `.qmd` (Quarto) en vez de `.docx`/`.pptx` directos, y se renderiza
   Las presentaciones `revealjs` son la excepción: ahí la licencia sigue en una slide visible "## Licencia"
   al cierre (ver plantilla), porque una nota al pie no es un patrón aplicable a una diapositiva.
 - **`author:`**: todo `.qmd` de texto del Cuadernillo debe declarar el equipo docente en el front matter,
-  separado por `;`: `Felipe Sodré Mendes Barros; Demian Lorán; Fabián Rechberger` (sin la nota al pie de
+  separado por `;`: `Felipe Sodré Mendes Barros; Demian Lorán` (sin la nota al pie de
   la licencia, que va colgada aparte del párrafo "Cátedra SIG III", ver punto anterior).
 - **Sin comentarios de meta-proceso en el cuerpo**: no dejar notas sobre el estado del borrador, la
   versión o el proceso de edición (tipo "Borrador 2026, versión Quarto (piloto)...") dentro del texto que
