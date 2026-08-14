@@ -1,0 +1,936 @@
+// Cuestionario autoevaluativo — Texto I – Introducción a los Datos Ráster
+// SIG III — Tecnicatura Universitaria en Sistemas de Información Geográfica y Teledetección
+// Formato GIFT (importable a Moodle). Ver criterios de diseño en CLAUDE.md ("Actividades autoevaluativas"):
+// preguntas autocorregibles, devolución por alternativa, ceñidas al contenido del texto correspondiente.
+
+$CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/1. ¿Qué son los datos ráster?
+
+::T1-S1-01:: ¿Cuál es la definición más básica de un dato ráster? {
+=Una grilla regular de celdas, donde cada celda tiene asignado un valor numérico #Correcto: el ráster divide todo el espacio en una rejilla regular de celdas y le asigna un valor a cada una, sin excepción.
+~Un conjunto de puntos, líneas y polígonos que describen el territorio #Incorrecto: esa es la lógica del modelo vectorial, que elige qué partes del espacio representar. El ráster cubre todo el espacio por igual.
+~Una tabla de atributos asociada a una capa geográfica #Incorrecto: la tabla de atributos es propia del modelo vectorial. El ráster no tiene tabla de atributos, como se desarrolla más adelante en el texto.
+~Una base de datos que almacena coordenadas exactas de vértices #Incorrecto: guardar coordenadas de vértices es característico del vector. En el ráster la posición de cada celda es implícita, no se guarda como coordenadas de un vértice.
+}
+
+::T1-S1-02:: ¿Cuál es la diferencia fundamental entre cómo el vector y el ráster cubren el espacio? {
+=El vector elige qué partes del espacio son relevantes; el ráster cubre todo el espacio por igual, sin excepción #Correcto: el vector representa dibujando puntos, líneas o polígonos y deja todo lo demás sin representar, mientras que el ráster divide todo el espacio en una grilla sistemática.
+~El vector cubre todo el espacio por igual; el ráster solo representa las partes relevantes #Incorrecto: es al revés, según el texto: el ráster es el que cubre todo el espacio de forma sistemática.
+~Ambos modelos cubren el espacio exactamente de la misma manera #Incorrecto: el texto presenta esto como la diferencia estructural más básica entre ambos modelos, no como una similitud.
+~Ninguno de los dos modelos representa el espacio de forma completa #Incorrecto: el ráster sí representa el espacio de forma completa y sistemática, esa es justamente su característica distintiva frente al vector.
+}
+
+::T1-S1-03:: {T#Incorrecto: el texto es explícito en que el ráster cubre toda su extensión de forma sistemática y no deja huecos, a diferencia del vector.#Correcto: incluso las celdas sin información relevante quedan cubiertas por la grilla, porque el ráster no distingue "elementos" como el vector.} En un dato ráster existen celdas dentro de su extensión que quedan sin ningún valor asignado, de forma similar a los "huecos" que puede dejar un dato vectorial.
+
+::T1-S1-04:: ¿Qué tipo de fenómenos representa naturalmente bien el modelo ráster, gracias a su estructura de grilla regular? {
+=Fenómenos que varían de forma continua en el espacio, como la altitud o la temperatura #Correcto: en esos fenómenos no existe un borde real que se pueda dibujar con precisión, así que la grilla regular resulta natural para muestrearlos.
+~Fenómenos discretos con bordes exactos, como un lote catastral #Incorrecto: esos fenómenos son el caso donde el ráster tiene más limitaciones, precisamente porque su borde queda condicionado por el tamaño de celda.
+~Únicamente fenómenos categóricos codificados como números #Incorrecto: el ráster puede representar categorías, pero el texto señala los fenómenos continuos como el caso donde el modelo ráster resulta más natural.
+~Solamente datos que provienen de sensores satelitales #Incorrecto: el ráster no está limitado a datos de sensores; también puede representar, por ejemplo, datos derivados de interpolación o de rasterización de vectores.
+}
+
+::T1-S1-05:: Cuando un ráster representa categorías (por ejemplo, tipo de cobertura del suelo), ¿qué identifica el valor numérico de cada celda? {
+=Identifica a qué clase pertenece la celda, no mide una cantidad #Correcto: en ese caso el número codifica una categoría, no una magnitud física.
+~Mide una cantidad física expresada en una unidad determinada #Incorrecto: eso es lo que ocurre en un ráster de datos continuos (como temperatura), no en uno categórico.
+~Indica siempre la resolución espacial de esa celda en particular #Incorrecto: la resolución espacial es una propiedad del ráster completo, no un valor que cambie celda a celda.
+~No tiene ningún significado, es un valor arbitrario #Incorrecto: el valor sí tiene significado: codifica una clase específica (tipo de cobertura, tipo de suelo, etc.).
+}
+
+::T1-S1-06:: Relacione cada concepto con su definición. {
+=Geo-campo -> Función que asigna un valor a cada punto de una región continua del espacio
+=Geo-objeto -> Entidad singular e indivisible definida por su frontera
+=Ráster -> Forma natural de implementar un geo-campo
+=Vector -> Forma natural de implementar un geo-objeto
+}
+
+::T1-S1-07:: ¿Por qué recortar una parte de un geo-campo sigue siendo, en esencia, el mismo tipo de dato? {
+=Porque su límite es solo una limitación de la medición, no una frontera real del fenómeno #Correcto: el borde de una escena satelital, por ejemplo, no es un límite del fenómeno en sí, sino de lo que se pudo medir.
+~Porque un geo-campo no tiene ningún límite espacial definido #Incorrecto: todo dato geográfico tiene una extensión definida; lo que señala el texto es que ese límite no representa una frontera real del fenómeno.
+~Porque los geo-campos siempre se almacenan en formato vectorial #Incorrecto: es al revés: el modelo ráster es la forma natural de implementar un geo-campo, según el texto.
+~Porque la resolución espacial del dato no cambia nunca #Incorrecto: la resolución no tiene relación directa con esta propiedad; lo relevante es la naturaleza continua del fenómeno representado.
+}
+
+::T1-S1-08:: ¿Por qué partir un geo-objeto en dos ya no conserva sus propiedades originales? {
+=Porque su identidad depende justamente de la frontera que lo define #Correcto: un lote catastral o una cuenca delimitada son entidades singulares e indivisibles; su frontera es constitutiva de lo que son.
+~Porque los geo-objetos no pueden representarse en formato digital #Incorrecto: los geo-objetos sí se representan digitalmente, típicamente en formato vectorial.
+~Porque todo geo-objeto es, en el fondo, un dato ráster #Incorrecto: es al revés: el modelo vectorial es la forma natural de implementar un geo-objeto, según el texto.
+~Porque los geo-objetos varían de forma continua en el espacio #Incorrecto: esa es la característica de un geo-campo, no de un geo-objeto, que se define por tener una frontera precisa.
+}
+
+::T1-S1-09:: {T#Incorrecto: el texto aclara explícitamente que ese límite es una limitación de la medición y no una frontera real del fenómeno.#Correcto: por eso se puede recortar cualquier parte de un geo-campo y el resultado sigue siendo, en esencia, el mismo tipo de dato.} El límite de un geo-campo, como el borde de una escena satelital, representa una frontera real del fenómeno que se está midiendo.
+
+::T1-S1-10:: Según el texto, ¿cuál de las siguientes opciones es un ejemplo de geo-objeto? {
+=Un lote catastral #Correcto: es una entidad singular definida por su frontera, tal como la describe el texto.
+~La temperatura del aire sobre una región #Incorrecto: la temperatura es un ejemplo de geo-campo, una función continua sin frontera real.
+~La reflectancia captada por un sensor satelital #Incorrecto: ese es otro ejemplo de geo-campo mencionado en el texto.
+~La altitud del terreno #Incorrecto: la altitud es el ejemplo clásico de geo-campo que da el texto, no de geo-objeto.
+}
+
+::T1-S1-11:: ¿Cómo se llama la unidad mínima de la grilla ráster que guarda un único valor? {
+=celda#Correcto: es el término que usa el texto para la unidad básica de la grilla.
+=píxel#Correcto: el texto usa "celda" y "píxel" como sinónimos para la unidad básica de la grilla ráster.
+}
+
+::T1-S1-12:: ¿Cuál es la metáfora que usa el texto para explicar de forma simple qué es un dato ráster? {
+=Una hoja cuadriculada donde cada cuadradito tiene anotado un número #Correcto: es la metáfora explícita que propone el texto para introducir el concepto.
+~Un álbum de fotos ordenado cronológicamente #Incorrecto: esa metáfora no aparece en el texto y no representa la estructura de grilla del ráster.
+~Una biblioteca con libros clasificados por tema #Incorrecto: esa metáfora se acerca más a la idea de tabla de atributos del vector, no a la estructura de un ráster.
+~Un mapa de ruta con puntos de referencia #Incorrecto: eso describe mejor una lógica vectorial de puntos, no la grilla regular del ráster.
+}
+
+::T1-S1-13:: De los siguientes fenómenos, ¿cuáles corresponden a datos continuos (y no categóricos) según el texto? {
+~%50%Altitud #Correcto: la altitud es uno de los ejemplos de dato continuo que da el texto.
+~%50%Temperatura #Correcto: la temperatura es otro de los ejemplos de dato continuo que da el texto.
+~%-50%Tipo de uso del suelo #Incorrecto: el tipo de uso del suelo es un ejemplo de dato categórico, no continuo.
+~%-50%Presencia o ausencia de un fenómeno #Incorrecto: eso también es un ejemplo de dato categórico según el texto, no de dato continuo.
+}
+
+::T1-S1-14:: {T#Incorrecto: en un ráster categórico, el número identifica una clase, no mide una magnitud.#Correcto: por eso el texto aclara que, en ese caso, el valor identifica una clase y no mide una cantidad.} El valor de una celda ráster que representa una categoría mide una cantidad física expresada en alguna unidad.
+
+::T1-S1-15:: Según el texto, la correspondencia entre geo-campo/geo-objeto y ráster/vector: {
+=No es casual: es la razón de fondo por la que cada modelo de datos resulta más apto para un tipo de fenómeno #Correcto: el texto presenta esta correspondencia como la base conceptual de por qué cada modelo tiene sus fortalezas y límites.
+~Es completamente casual y no tiene ninguna relación con las fortalezas de cada modelo #Incorrecto: el texto dice explícitamente lo contrario: esa correspondencia "no es casual".
+~Solo aplica a datos satelitales, no a otros tipos de dato geográfico #Incorrecto: el texto la presenta como una distinción general de la Ciencia de la Información Geográfica, no limitada a datos satelitales.
+~Fue reemplazada por completo por el modelo de espacio celular #Incorrecto: el espacio celular se presenta más adelante en el texto como una generalización, no como un reemplazo de esta distinción.
+}
+
+::T1-S1-16:: ¿Qué distingue conceptualmente al ráster respecto de cómo "elige" qué partes del espacio representar? {
+=No elige: cubre sistemáticamente todo el espacio con su grilla regular #Correcto: a diferencia del vector, el ráster no selecciona elementos relevantes, sino que muestrea todo el espacio por igual.
+~Elige representar solo los objetos con mayor relevancia temática #Incorrecto: esa selectividad es propia del modelo vectorial, no del ráster.
+~Elige representar únicamente los bordes de los fenómenos #Incorrecto: el ráster no se organiza en torno a bordes, sino que cubre toda la superficie de forma regular.
+~Elige representar solo las zonas donde hay datos disponibles #Incorrecto: incluso donde no hay información relevante, la grilla ráster sigue cubriendo esas celdas (por ejemplo, con NoData), no las omite.
+}
+
+$CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/2. Estructura y características generales
+
+::T1-S2-01:: Técnicamente, ¿qué es un dato ráster? {
+=Una matriz de filas y columnas, donde cada celda ocupa un área de tamaño definido y guarda un único valor #Correcto: es la definición técnica que da el texto sobre la "hoja cuadriculada" presentada antes de forma intuitiva.
+~Una colección de coordenadas de vértices conectadas entre sí #Incorrecto: eso describe una geometría vectorial, no una matriz ráster.
+~Una tabla relacional con múltiples columnas por registro #Incorrecto: esa estructura es más propia de una tabla de atributos vectorial; el ráster no tiene tabla de atributos.
+~Un archivo de texto plano con coordenadas geográficas #Incorrecto: un ráster es una estructura matricial, no un listado de coordenadas en texto plano.
+}
+
+::T1-S2-02:: ¿Cuál de las siguientes NO es una característica general del ráster, según el texto? {
+=Cada celda guarda explícitamente sus propias coordenadas, como un vértice vectorial #Correcto: es la opción falsa: la posición de una celda es siempre implícita, se calcula a partir de origen, resolución y cantidad de filas/columnas, nunca viaja con la celda.
+~Representa de forma sistemática toda su extensión espacial, sin huecos #Incorrecto: esta sí es una de las cuatro características generales que enumera el texto.
+~En general, todas las celdas de un mismo ráster tienen la misma dimensión en el terreno #Incorrecto: esta también es una de las características generales mencionadas (con la excepción de rásteres con deformación geométrica).
+~Cada celda guarda un único valor numérico #Incorrecto: esta es justamente una de las cuatro características generales que describe el texto.
+}
+
+::T1-S2-03:: {T#Incorrecto: el texto aclara que la posición de una celda nunca es un dato que viaje con la celda misma, a diferencia de lo que ocurre con un vértice vectorial.#Correcto: por eso el texto dice que la posición de una celda es siempre implícita, deducida matemáticamente.} La posición de una celda ráster viaja explícitamente junto con el valor de esa celda, de la misma forma en que un vértice vectorial trae sus propias coordenadas.
+
+::T1-S2-04:: ¿A partir de qué tres datos se calcula la posición de una celda ráster? {
+=El origen del ráster, su resolución, y la cantidad de filas y columnas #Correcto: son exactamente los tres datos que menciona el texto para deducir matemáticamente la posición de cualquier celda.
+~El nombre del archivo, su tamaño en bytes, y su formato de compresión #Incorrecto: ninguno de esos datos interviene en el cálculo de la posición geográfica de una celda.
+~Las coordenadas de cada vértice y el sistema de referencia del proyecto #Incorrecto: los vértices son propios del modelo vectorial; en el ráster no hay vértices individuales con coordenadas propias.
+~La resolución espectral, la resolución temporal y la resolución radiométrica #Incorrecto: esas son las otras propiedades técnicas del ráster (vistas en la sección siguiente), pero no intervienen en el cálculo de la posición de una celda.
+}
+
+::T1-S2-05:: ¿Cómo se llama la propiedad que define cuánto terreno representa cada celda de un ráster? {
+=resolución espacial#Correcto: es el término técnico que usa el texto para esa propiedad.
+}
+
+::T1-S2-06:: ¿Por qué el texto afirma que el ráster representa toda su extensión "sin huecos"? {
+=Porque divide el espacio en una grilla regular donde cada celda recibe un valor, sin excepción #Correcto: a diferencia del vector, no existen zonas dentro de la extensión del ráster que queden sin representar.
+~Porque nunca puede tener valores de tipo NoData #Incorrecto: un ráster sí puede tener celdas con valor NoData; lo importante es que esas celdas igual quedan cubiertas por la grilla, con ese valor asignado.
+~Porque siempre cubre la totalidad de la superficie terrestre #Incorrecto: el ráster cubre toda SU extensión definida, no necesariamente toda la superficie terrestre.
+~Porque solo se aplica a fenómenos categóricos #Incorrecto: esta característica aplica a cualquier ráster, sea de datos continuos o categóricos.
+}
+
+::T1-S2-07:: {F#Incorrecto: el propio texto reconoce que "en la práctica existen rásteres con cierta deformación geométrica", como excepción a la regla general.#Correcto: el texto dice "en general" todas las celdas tienen la misma dimensión, aclarando que existen excepciones con deformación geométrica.} En la práctica existen rásteres cuyas celdas no tienen exactamente el mismo tamaño en toda su extensión, como excepción a la regla general.
+
+::T1-S2-08:: ¿Qué ventaja aporta que, en general, todas las celdas de un mismo ráster tengan la misma dimensión? {
+=Simplifica enormemente los cálculos posteriores, porque no hay que lidiar con geometrías de tamaños distintos #Correcto: es la ventaja que señala explícitamente el texto sobre la resolución uniforme.
+~Permite que el archivo ocupe siempre menos espacio que un vector #Incorrecto: el texto no plantea esa comparación de tamaño de archivo en esta sección; de hecho, más adelante señala que el tamaño de archivo ráster puede crecer bastante.
+~Hace innecesario definir la resolución espacial del ráster #Incorrecto: al contrario, esa uniformidad es justamente lo que permite hablar de "la" resolución espacial de un ráster como una propiedad única.
+~Evita que el ráster necesite un sistema de referencia #Incorrecto: todo dato geográfico, ráster o vectorial, necesita un sistema de referencia para ubicarse en el espacio.
+}
+
+::T1-S2-09:: ¿Qué tipo de dato guarda cada celda de un ráster, según la estructura básica descripta en el texto? {
+=Un único valor numérico, ya sea una medida física o una categoría codificada #Correcto: es la tercera característica general que enumera el texto.
+~Varios valores numéricos independientes, uno por cada atributo del fenómeno #Incorrecto: eso describiría más bien una tabla de atributos vectorial; una celda ráster (monobanda) guarda un único valor.
+~Un texto libre que describe el fenómeno representado #Incorrecto: las celdas ráster guardan valores numéricos, no texto descriptivo.
+~Nada, salvo que se le asocie explícitamente una tabla de atributos #Incorrecto: precisamente el ráster no tiene tabla de atributos; cada celda guarda directamente su valor numérico.
+}
+
+::T1-S2-10:: Que la posición de una celda sea "implícita" significa que: {
+=Se deduce matemáticamente a partir de datos generales del ráster, nunca viaja como dato propio de la celda #Correcto: es la definición exacta que da el texto sobre este punto.
+~No se puede conocer bajo ninguna circunstancia #Incorrecto: sí se puede conocer, precisamente calculándola a partir del origen, la resolución y la cantidad de filas y columnas.
+~Cambia aleatoriamente cada vez que se abre el archivo #Incorrecto: la posición se calcula de forma consistente con la misma fórmula, no varía aleatoriamente.
+~Depende del software específico que se use para visualizar el ráster #Incorrecto: el cálculo de la posición es una propiedad del formato de datos, no del software de visualización.
+}
+
+::T1-S2-11:: Relacione cada característica general del ráster con su descripción. {
+=Toda la extensión cubierta -> No hay huecos donde no se dijo nada, a diferencia del vector
+=Resolución uniforme -> En general, todas las celdas del mismo ráster tienen la misma dimensión
+=Valor único por celda -> Cada celda guarda una medida física o una categoría codificada
+=Posición implícita -> Se calcula a partir del origen, la resolución y la cantidad de filas y columnas
+}
+
+::T1-S2-12:: ¿Qué es lo que convierte al ráster en una estructura tan amigable para las operaciones matemáticas y espaciales, según el texto? {
+=Su regularidad: mismo tamaño de celda y posición calculable siempre con la misma fórmula #Correcto: esa combinación de uniformidad y previsibilidad es la que el texto señala como base de esa "amigabilidad".
+~Que no necesita ningún sistema de referencia espacial #Incorrecto: el ráster sí requiere un sistema de referencia, igual que cualquier dato geoespacial.
+~Que siempre ocupa menos espacio en disco que un dato vectorial #Incorrecto: esa comparación de tamaño no es la razón que da el texto; de hecho, más adelante se señala que el ráster puede pesar bastante.
+~Que puede almacenar texto libre en cada celda #Incorrecto: el ráster almacena valores numéricos, no texto libre; esa no es la razón de su aptitud para operaciones matemáticas.
+}
+
+::T1-S2-13:: {T#Incorrecto: precisamente esa es una diferencia real entre ambos modelos, no una afirmación falsa.#Correcto: el vector sí trae sus propias coordenadas en cada vértice, mientras que en el ráster la posición de la celda es siempre implícita.} Un vértice vectorial trae sus propias coordenadas explícitas, a diferencia de una celda ráster, cuya posición se calcula matemáticamente.
+
+::T1-S2-14:: ¿Cuál de las siguientes afirmaciones describe correctamente una celda ráster? {
+=Ocupa un área de tamaño definido y guarda un único valor #Correcto: es la definición que da el texto sobre la unidad básica de la matriz ráster.
+~Puede contener múltiples geometrías distintas superpuestas #Incorrecto: eso describiría una situación vectorial; una celda ráster guarda un único valor, no geometrías superpuestas.
+~Siempre corresponde exactamente a un objeto discreto del mundo real #Incorrecto: al contrario, la celda ráster no distingue "elementos"; cubre el espacio de forma sistemática sin importar qué haya en el terreno.
+~No tiene ninguna relación con el tamaño real del terreno #Incorrecto: cada celda sí representa un área de tamaño definido en el terreno, dado por su resolución espacial.
+}
+
+::T1-S2-15:: ¿Qué distingue estructuralmente a un ráster de un dato vectorial en términos de "huecos" dentro de su extensión? {
+=El vector puede dejar partes del espacio sin representar; el ráster no #Correcto: esta es exactamente la distinción que plantea el texto entre ambos modelos.
+~El ráster puede dejar partes del espacio sin representar; el vector no #Incorrecto: es al revés según el texto: es el vector el que puede dejar zonas sin representar.
+~Ninguno de los dos modelos puede dejar huecos en su extensión #Incorrecto: el vector sí puede dejar huecos, ya que solo representa las geometrías que decide dibujar.
+~Ambos modelos dejan siempre huecos de la misma manera #Incorrecto: el texto marca esta diferencia como una de las más básicas entre ambos modelos, no como una similitud.
+}
+
+::T1-S2-16:: De las siguientes, ¿cuáles integran la lista de las cuatro características generales del ráster que enumera el texto? {
+~%25%Representa de forma sistemática toda su extensión, sin huecos #Correcto: es la primera de las cuatro características generales.
+~%25%En general, todas las celdas tienen la misma dimensión en el terreno #Correcto: es la segunda característica general mencionada.
+~%25%Cada celda guarda un único valor numérico #Correcto: es la tercera característica general mencionada.
+~%25%La posición de cada celda es siempre implícita #Correcto: es la cuarta característica general mencionada.
+~%-100%Cada celda tiene su propia tabla de atributos individual #Incorrecto: esta opción es falsa; el ráster, precisamente, no tiene tabla de atributos, como se desarrolla más adelante en el texto.
+}
+
+$CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/3. Tipos de datos que pueden almacenar
+
+::T1-S3-01:: ¿Qué caracteriza a un dato ráster de tipo continuo? {
+=Varía de forma progresiva en el espacio, sin saltos abruptos entre una celda y la vecina #Correcto: es la definición que da el texto para los datos continuos, como la altitud o la temperatura.
+~Identifica siempre una clase o categoría, nunca una magnitud #Incorrecto: eso describe a los datos categóricos o discretos, no a los continuos.
+~Solo puede provenir de sensores satelitales multiespectrales #Incorrecto: los datos continuos pueden provenir de muchas fuentes (interpolación, modelos de elevación, etc.), no exclusivamente de sensores.
+~No puede representarse nunca en formato ráster #Incorrecto: al contrario, el texto señala que el ráster representa muy bien justamente los fenómenos continuos.
+}
+
+::T1-S3-02:: ¿Cuál de las siguientes opciones es un ejemplo de dato ráster continuo, según el texto? {
+=La altitud del terreno #Correcto: es uno de los ejemplos explícitos de dato continuo que menciona el texto.
+~El tipo de uso del suelo #Incorrecto: es uno de los ejemplos de dato categórico que da el texto, no continuo.
+~La clase de vegetación #Incorrecto: también es un ejemplo de dato categórico según el texto.
+~Una zonificación de riesgo #Incorrecto: la zonificación de riesgo es otro de los ejemplos de dato categórico mencionados.
+}
+
+::T1-S3-03:: En un ráster categórico, ¿qué identifica el valor numérico de cada celda? {
+=A qué clase pertenece esa celda, no una cantidad #Correcto: el texto es explícito en que, en ese caso, el número identifica una clase.
+~Siempre una medida en metros de la resolución espacial #Incorrecto: la resolución espacial es una propiedad del ráster completo, no algo que indique el valor de cada celda individual.
+~Una probabilidad estadística asociada al fenómeno #Incorrecto: el texto no describe los valores categóricos como probabilidades, sino como códigos que identifican una clase.
+~La cantidad de bandas que tiene el ráster #Incorrecto: la cantidad de bandas es una propiedad del archivo completo (mono o multibanda), no del valor de una celda categórica.
+}
+
+::T1-S3-04:: {T#Incorrecto: el texto señala que operar matemáticamente sobre datos categóricos, como sumarlos o promediarlos, "rara vez tiene sentido interpretativo".#Correcto: exactamente, promediar valores de un ráster categórico (como tipo de suelo) carece de sentido interpretativo, porque los códigos de clase no son cantidades.} Tiene sentido interpretativo promediar los valores de un ráster categórico, como uno de tipo de suelo.
+
+::T1-S3-05:: ¿Sobre qué tipo de dato ráster sí tiene sentido interpretativo aplicar operaciones matemáticas como sumar o promediar? {
+=Sobre datos continuos #Correcto: el texto contrasta esto directamente con los datos categóricos, donde esas operaciones rara vez tienen sentido.
+~Sobre datos categóricos #Incorrecto: es justamente el caso donde el texto dice que esas operaciones rara vez tienen sentido interpretativo.
+~Sobre ambos tipos de dato por igual #Incorrecto: el texto marca una diferencia explícita entre ambos casos, no los trata como equivalentes.
+~Sobre ningún tipo de dato ráster #Incorrecto: sobre datos continuos sí tiene sentido, según el texto.
+}
+
+::T1-S3-06:: ¿Cómo se llama, en la literatura de bases de datos geográficas citada en el texto, la grilla numérica que se usa para representar datos continuos? {
+=grade regular#Correcto: es el término técnico que menciona el texto para esa estructura.
+=grilla regular#Correcto: es una forma equivalente en español del término que usa el texto.
+}
+
+::T1-S3-07:: ¿Cómo se llama la estructura donde cada valor de celda es un código de clase en lugar de una medida? {
+=matriz temática#Correcto: es el término técnico que da el texto para esta estructura, propia de los datos categóricos.
+}
+
+::T1-S3-08:: ¿Qué diferencia a un ráster monobanda de uno multibanda? {
+=El monobanda contiene una sola capa de información; el multibanda apila varias capas alineadas en el mismo archivo #Correcto: es exactamente la distinción que plantea el texto entre ambos tipos.
+~El monobanda es siempre de mayor resolución espacial que el multibanda #Incorrecto: la cantidad de bandas no determina la resolución espacial; son propiedades independientes.
+~El multibanda solo puede contener datos categóricos #Incorrecto: un ráster multibanda, como una imagen satelital, típicamente contiene datos continuos (valores espectrales), no categóricos.
+~El monobanda no puede representar modelos digitales de elevación #Incorrecto: al contrario, el MDE es justamente el ejemplo típico de ráster monobanda que da el texto.
+}
+
+::T1-S3-09:: ¿Cuál es el ejemplo típico de ráster monobanda que da el texto? {
+=Un modelo digital de elevación (MDE) #Correcto: es el caso típico que menciona el texto, donde cada celda guarda un único valor de altura.
+~Una imagen satelital Sentinel-2 #Incorrecto: una imagen satelital multiespectral es justamente el ejemplo de ráster multibanda que da el texto.
+~Un mapa de uso del suelo #Incorrecto: el texto no lo presenta como el ejemplo típico de monobanda; el MDE es el caso que se menciona explícitamente.
+~Un cubo de datos espacio-temporal #Incorrecto: el cubo de datos se relaciona más con la idea de espacio celular con múltiples atributos, no con un ráster monobanda simple.
+}
+
+::T1-S3-10:: ¿Cuál es el ejemplo típico de ráster multibanda que da el texto? {
+=Una imagen satelital, con bandas independientes para distintas longitudes de onda #Correcto: es el ejemplo explícito que da el texto, con bandas para rojo, infrarrojo cercano, azul, etc.
+~Un modelo digital de elevación (MDE) #Incorrecto: el MDE es justamente el ejemplo de ráster monobanda que da el texto, no multibanda.
+~Un mapa de pendientes derivado #Incorrecto: un mapa de pendientes es un producto derivado, generalmente monobanda, no el ejemplo de multibanda del texto.
+~Una capa vectorial rasterizada de forma binaria #Incorrecto: una rasterización binaria produce típicamente un ráster monobanda de dos valores, no multibanda.
+}
+
+::T1-S3-11:: ¿Qué comparten entre sí las distintas bandas de un ráster multibanda, según el texto? {
+=Están perfectamente alineadas porque comparten la misma grilla #Correcto: es la propiedad que remarca el texto sobre las bandas de una imagen satelital multibanda.
+~Cada banda tiene su propia resolución espacial, distinta de las demás #Incorrecto: el texto señala justamente lo contrario: las bandas comparten la misma grilla, es decir, la misma resolución y alineación.
+~Cada banda representa siempre una fecha distinta #Incorrecto: eso describiría más bien una serie temporal (como en el espacio celular), no el caso típico de bandas espectrales de una imagen satelital.
+~No tienen ninguna relación espacial entre sí #Incorrecto: al contrario, están alineadas porque comparten la misma grilla, según el texto.
+}
+
+::T1-S3-12:: ¿Qué es un "espacio celular", según la generalización que presenta el texto? {
+=Una estructura matricial donde cada celda guarda varios atributos a la vez, no uno solo #Correcto: es la definición que da el texto para esta idea más general, de la cual el ráster multibanda es un caso particular.
+~Un tipo de ráster que solo puede tener un valor por celda #Incorrecto: es lo contrario: el espacio celular se caracteriza justamente por permitir varios atributos por celda.
+~Una forma de representar datos vectoriales sin usar geometría #Incorrecto: el espacio celular es una generalización de la estructura ráster, no una forma de prescindir de la geometría vectorial.
+~Un sinónimo exacto de resolución espacial #Incorrecto: la resolución espacial es una propiedad distinta, relacionada con el tamaño de celda, no con la cantidad de atributos por celda.
+}
+
+::T1-S3-13:: Relacione cada ejemplo con el tipo de información que agrega al espacio celular. {
+=Variables socioambientales medidas sobre la misma grilla -> Varios atributos distintos por celda
+=La misma variable repetida en distintos momentos del tiempo -> Una serie temporal sobre la misma grilla
+}
+
+::T1-S3-14:: ¿Qué habilita, más adelante en la cursada, la generalización del espacio celular, según el texto? {
+=El modelado dinámico y los cubos de datos espacio-temporales de la Unidad III #Correcto: es la conexión explícita que hace el texto con contenidos posteriores de la materia.
+~La eliminación completa de la necesidad de resolución espacial #Incorrecto: la resolución espacial sigue siendo una propiedad relevante en un espacio celular; no desaparece.
+~La conversión automática de ráster a vector #Incorrecto: el espacio celular no está vinculado en el texto con la vectorización, sino con el modelado dinámico y los cubos de datos.
+~El reemplazo del álgebra de mapas por otro tipo de análisis #Incorrecto: el texto no plantea un reemplazo del álgebra de mapas, sino una generalización de la estructura de datos.
+}
+
+::T1-S3-15:: {T#Incorrecto: el texto lo afirma explícitamente como cierto.#Correcto: el texto describe el apilamiento de bandas como "un caso particular de una idea más general, la del espacio celular".} El apilamiento de bandas de un ráster multibanda es, según el texto, un caso particular de la idea más general de espacio celular.
+
+::T1-S3-16:: De las siguientes, ¿cuáles son ejemplos de datos categóricos o discretos según el texto? {
+~%25%Tipo de uso del suelo #Correcto: es uno de los ejemplos explícitos de dato categórico que da el texto.
+~%25%Clase de vegetación #Correcto: es otro de los ejemplos de dato categórico mencionados en el texto.
+~%25%Tipo de suelo #Correcto: también aparece explícitamente como ejemplo de dato categórico.
+~%25%Zonificación de riesgo #Correcto: es el cuarto ejemplo de dato categórico que da el texto.
+~%-50%Temperatura #Incorrecto: la temperatura es uno de los ejemplos de dato continuo del texto, no categórico.
+~%-50%Humedad #Incorrecto: la humedad también aparece como ejemplo de dato continuo, no categórico.
+}
+
+::T1-S3-17:: ¿Por qué rara vez tiene sentido sumar o promediar los valores de un ráster categórico? {
+=Porque el número no mide una cantidad, sino que identifica una clase, y las clases no son sumables #Correcto: es la razón que da el texto para explicar por qué esas operaciones carecen de sentido interpretativo en datos categóricos.
+~Porque los rásteres categóricos no permiten aplicar ninguna operación de álgebra de mapas #Incorrecto: sí se les pueden aplicar operaciones de álgebra de mapas (como reclasificar), solo que sumarlos o promediarlos no tiene sentido interpretativo.
+~Porque siempre tienen una resolución espacial distinta entre celdas #Incorrecto: la resolución espacial no es la razón; el problema es de naturaleza semántica, no de tamaño de celda.
+~Porque solo existen en formato multibanda #Incorrecto: un ráster categórico puede ser perfectamente monobanda, como un mapa de tipo de suelo.
+}
+
+$CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/4. Propiedades técnicas de los datos ráster
+
+::T1-S4-01:: ¿Qué pregunta responde la resolución espacial de un ráster? {
+=¿Cuánto terreno representa cada celda? #Correcto: es la primera de las cuatro propiedades técnicas que describe el texto.
+~¿Cuántas longitudes de onda distintas puede distinguir el sensor? #Incorrecto: esa es la resolución espectral, no la espacial.
+~¿Con qué frecuencia se actualiza el dato? #Incorrecto: esa es la resolución temporal, no la espacial.
+~¿Cuántos niveles distintos puede registrar cada celda? #Incorrecto: esa es la resolución radiométrica, no la espacial.
+}
+
+::T1-S4-02:: ¿Qué pregunta responde la resolución espectral de un ráster? {
+=¿Cuántas longitudes de onda distintas puede distinguir el sensor que generó el dato? #Correcto: es la segunda propiedad técnica que describe el texto.
+~¿Cuánto terreno representa cada celda? #Incorrecto: esa es la resolución espacial, no la espectral.
+~¿Con qué frecuencia se actualiza el dato? #Incorrecto: esa es la resolución temporal, no la espectral.
+~¿Cuántos niveles distintos puede registrar cada celda? #Incorrecto: esa es la resolución radiométrica, no la espectral.
+}
+
+::T1-S4-03:: ¿Qué pregunta responde la resolución temporal de un ráster? {
+=¿Con qué frecuencia se actualiza o se vuelve a capturar el dato? #Correcto: es la tercera propiedad técnica que describe el texto.
+~¿Cuánto terreno representa cada celda? #Incorrecto: esa es la resolución espacial, no la temporal.
+~¿Cuántas longitudes de onda distintas puede distinguir el sensor? #Incorrecto: esa es la resolución espectral, no la temporal.
+~¿Cuántos niveles distintos puede registrar cada celda? #Incorrecto: esa es la resolución radiométrica, no la temporal.
+}
+
+::T1-S4-04:: ¿Qué pregunta responde la resolución radiométrica de un ráster? {
+=¿Cuántos niveles distintos puede registrar cada celda? #Correcto: es la cuarta propiedad técnica que describe el texto.
+~¿Cuánto terreno representa cada celda? #Incorrecto: esa es la resolución espacial, no la radiométrica.
+~¿Con qué frecuencia se actualiza el dato? #Incorrecto: esa es la resolución temporal, no la radiométrica.
+~¿Cuántas longitudes de onda distintas puede distinguir el sensor? #Incorrecto: esa es la resolución espectral, no la radiométrica.
+}
+
+::T1-S4-05:: ¿Cuántos niveles de gris permite una resolución radiométrica de 8 bits, según el texto? {#256:0#Correcto: el texto indica explícitamente que 8 bits permiten 256 niveles de gris, de 0 a 255.}
+
+::T1-S4-06:: ¿Cuál de las siguientes opciones describe mejor la resolución radiométrica de 16 bits, según el texto? {
+=Permite más de 65.000 niveles distintos #Correcto: el texto lo indica explícitamente al comparar 8 y 16 bits.
+~Permite exactamente 256 niveles distintos #Incorrecto: 256 niveles corresponde a una resolución radiométrica de 8 bits, no de 16.
+~Permite solamente 2 niveles distintos (blanco y negro) #Incorrecto: 2 niveles correspondería a 1 bit, muy por debajo de lo que permite una resolución de 16 bits.
+~No tiene relación con la cantidad de niveles que puede registrar una celda #Incorrecto: la resolución radiométrica se define justamente por la cantidad de niveles que puede registrar cada celda.
+}
+
+::T1-S4-07:: Según el texto, cuando disminuye el tamaño de celda (mayor detalle espacial), ¿qué ocurre típicamente con el archivo y el procesamiento? {
+=Se vuelven más pesados y costosos #Correcto: el texto plantea esto como una decisión de compromiso al elegir la resolución espacial adecuada.
+~Se vuelven más livianos y rápidos de procesar #Incorrecto: es al revés: a mayor detalle (celdas más chicas), mayor peso de archivo y costo de procesamiento, según el texto.
+~No cambian en absoluto #Incorrecto: el texto es explícito en que sí hay un compromiso entre detalle y costo.
+~Depende exclusivamente del software utilizado, no de la resolución elegida #Incorrecto: el texto lo presenta como una consecuencia de la resolución elegida, no del software.
+}
+
+::T1-S4-08:: {T#Incorrecto: el texto lo plantea explícitamente como una decisión de compromiso.#Correcto: el texto dice textualmente que elegir la resolución adecuada "es, en la práctica, una decisión de compromiso".} Elegir la resolución espacial adecuada para un análisis es, en la práctica, una decisión de compromiso entre el nivel de detalle y el costo de procesamiento.
+
+::T1-S4-09:: ¿Qué tipo de ráster, según el ejemplo del texto, típicamente NO tiene resolución espectral? {
+=Un mapa de pendientes derivado de un modelo de elevación #Correcto: es el ejemplo explícito que da el texto de un ráster sin resolución espectral ni temporal.
+~Una imagen Sentinel-2 #Incorrecto: una imagen satelital multiespectral como Sentinel-2 sí tiene resolución espectral, por definición.
+~Una imagen Landsat #Incorrecto: al igual que Sentinel-2, Landsat es un sensor multiespectral con resolución espectral definida.
+~Una imagen MODIS #Incorrecto: MODIS también es un sensor multiespectral, por lo tanto sí tiene resolución espectral.
+}
+
+::T1-S4-10:: ¿Por qué un mapa de pendientes no tiene resolución temporal ni espectral, según el texto? {
+=Porque es el resultado de un cálculo aplicado una sola vez sobre otro ráster, no proviene de un sensor que capture distintas longitudes de onda en distintos momentos #Correcto: es la explicación exacta que da el texto para este ejemplo.
+~Porque los mapas de pendiente nunca tienen resolución espacial #Incorrecto: el texto aclara que sí tiene resolución espacial (el tamaño de sus celdas); lo que no tiene es resolución espectral ni temporal.
+~Porque las resoluciones espectral y temporal fueron reemplazadas por la resolución radiométrica #Incorrecto: las cuatro resoluciones son independientes entre sí; ninguna reemplaza a otra.
+~Porque un mapa de pendientes no es un dato ráster #Incorrecto: un mapa de pendientes sí es un dato ráster, derivado de un modelo de elevación.
+}
+
+::T1-S4-11:: {F#Incorrecto: el texto aclara que "rara vez un mismo ráster las tiene todas".#Correcto: el texto es explícito en que no todos los rásteres tienen las cuatro resoluciones; por ejemplo, un mapa de pendientes no tiene resolución espectral ni temporal.} Todo ráster, sin excepción, tiene definidas las cuatro resoluciones: espacial, espectral, temporal y radiométrica.
+
+::T1-S4-12:: ¿Qué característica tienen muchos rásteres respecto de su resolución temporal, según el texto? {
+=Son estáticos: representan una única fecha, sin vocación de actualizarse #Correcto: es lo que señala el texto como contraste frente a los rásteres con alta frecuencia de actualización.
+~Se actualizan siempre con frecuencia diaria #Incorrecto: la frecuencia diaria es un ejemplo posible para imágenes satelitales, pero el texto aclara que muchos rásteres son directamente estáticos.
+~No pueden tener nunca una fecha asociada #Incorrecto: al contrario, un ráster estático sí tiene una fecha asociada, solo que no se actualiza después de esa captura.
+~Cambian su resolución espacial cada vez que se actualizan #Incorrecto: la resolución temporal no tiene relación directa con cambios en la resolución espacial.
+}
+
+::T1-S4-13:: ¿Cuál de los siguientes es un ejemplo de dato con alta resolución temporal, según el texto? {
+=Una imagen satelital con frecuencia de captura diaria, semanal o mensual #Correcto: es el ejemplo explícito que da el texto sobre resolución temporal.
+~Un mapa de pendientes derivado de un MDE #Incorrecto: ese es justamente el ejemplo de ráster sin resolución temporal (estático) que da el texto.
+~Un ráster categórico de tipo de suelo #Incorrecto: el texto no lo presenta como ejemplo de alta resolución temporal; los rásteres derivados suelen ser estáticos.
+~Un ráster con resolución radiométrica de 8 bits #Incorrecto: la resolución radiométrica es independiente de la resolución temporal; no hay relación directa entre ambas en el texto.
+}
+
+::T1-S4-14:: Relacione cada tipo de resolución con la pregunta que responde. {
+=Resolución espacial -> Cuánto terreno representa cada celda
+=Resolución espectral -> Cuántas longitudes de onda distingue el sensor
+=Resolución temporal -> Con qué frecuencia se actualiza el dato
+=Resolución radiométrica -> Cuántos niveles distintos registra cada celda
+}
+
+::T1-S4-15:: ¿Cómo son, entre sí, las cuatro resoluciones técnicas del ráster (espacial, espectral, temporal y radiométrica), según el texto? {
+=Son independientes entre sí #Correcto: el texto lo afirma explícitamente, y por eso rara vez un mismo ráster las tiene todas.
+~Dependen totalmente unas de otras: si una cambia, cambian todas #Incorrecto: es lo contrario de lo que afirma el texto.
+~Son en realidad la misma propiedad, expresada de cuatro formas distintas #Incorrecto: el texto las presenta como cuatro preguntas distintas que se le pueden hacer a un ráster, no como una sola propiedad.
+~Solo pueden coexistir dos de ellas al mismo tiempo #Incorrecto: el texto no plantea ese límite; simplemente señala que rara vez un mismo ráster las tiene las cuatro, sin fijar un máximo de dos.
+}
+
+::T1-S4-16:: De las siguientes, ¿cuáles corresponden a una de las cuatro resoluciones técnicas descriptas en el texto? {
+~%25%Espacial #Correcto: es una de las cuatro resoluciones técnicas mencionadas en el texto.
+~%25%Espectral #Correcto: es otra de las cuatro resoluciones técnicas mencionadas en el texto.
+~%25%Temporal #Correcto: es otra de las cuatro resoluciones técnicas mencionadas en el texto.
+~%25%Radiométrica #Correcto: es la cuarta resolución técnica mencionada en el texto.
+~%-50%Geométrica #Incorrecto: "resolución geométrica" no es uno de los cuatro términos que usa el texto.
+~%-50%Topológica #Incorrecto: la topología no es una de las cuatro resoluciones técnicas del ráster que describe el texto.
+}
+
+::T1-S4-17:: ¿Qué determinan en conjunto las cuatro propiedades técnicas del ráster, según el texto? {
+=Qué tan detallado es el dato y qué tipo de análisis permite #Correcto: es la afirmación introductoria que hace el texto sobre estas cuatro propiedades.
+~Si el dato debe almacenarse en formato monobanda o multibanda #Incorrecto: esa distinción (mono/multibanda) es un tema tratado en una sección distinta del texto, no lo que determinan estas cuatro propiedades.
+~Si el dato es de tipo vectorial o ráster #Incorrecto: estas propiedades técnicas son específicas del modelo ráster; no determinan si un dato es vectorial o ráster.
+~El sistema de referencia que debe usar el ráster #Incorrecto: el sistema de referencia es una propiedad distinta, no determinada por estas cuatro resoluciones.
+}
+
+::T1-S4-18:: ¿Cómo se llama la propiedad que indica cuántos niveles distintos puede registrar cada celda de un ráster? {
+=resolución radiométrica#Correcto: es el término técnico exacto que usa el texto para esta propiedad.
+}
+
+$CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/5. Interconversión entre vector y ráster
+
+::T1-S5-01:: ¿Qué es "rasterizar", según el texto? {
+=Convertir una geometría vectorial (punto, línea o polígono) en una malla regular #Correcto: es la definición exacta que da el texto para este proceso.
+~Convertir un ráster en una geometría vectorial #Incorrecto: ese es el proceso inverso, llamado vectorización o poligonización.
+~Comprimir un archivo ráster para reducir su tamaño #Incorrecto: la compresión de rásteres es un tema distinto, que el texto anuncia para el Texto VIII.
+~Cambiar el sistema de referencia de un ráster existente #Incorrecto: cambiar el sistema de referencia es una operación distinta (reproyección), no lo que describe la rasterización.
+}
+
+::T1-S5-02:: ¿Por qué es necesario rasterizar antes de aplicar álgebra de mapas o análisis multicriterio, según el texto? {
+=Porque esas operaciones se calculan celda a celda y no tienen forma directa de hacerse a partir de una geometría vectorial #Correcto: es la razón explícita que da el texto para justificar la necesidad de rasterizar en esos casos.
+~Porque el álgebra de mapas solo puede aplicarse sobre datos vectoriales #Incorrecto: es al revés: el álgebra de mapas se aplica sobre rásteres, precisamente porque se calcula celda a celda.
+~Porque los datos vectoriales no pueden tener atributos numéricos #Incorrecto: los datos vectoriales sí pueden tener atributos numéricos en su tabla de atributos; el problema es que esas operaciones celda a celda no se pueden aplicar directamente sobre geometrías.
+~Porque rasterizar mejora automáticamente la precisión geométrica del dato #Incorrecto: el texto señala lo contrario más adelante: rasterizar puede introducir pérdida de precisión geométrica, no mejorarla.
+}
+
+::T1-S5-03:: Al rasterizar una geometría vectorial, ¿qué decisiones hay que tomar según el texto? {
+~%33.33333%Qué valor va a tomar cada píxel #Correcto: es una de las decisiones clave que menciona el texto al describir el proceso de rasterización.
+~%33.33333%Qué resolución y extensión va a tener el ráster resultante #Correcto: es otra de las decisiones que señala explícitamente el texto.
+~%33.33333%Qué hacer con los píxeles que no quedan cubiertos por ninguna geometría (NoData) #Correcto: es la tercera decisión clave que menciona el texto.
+~%-100%El sistema de referencia cambia siempre de forma automática al rasterizar #Incorrecto: el texto no menciona un cambio automático de sistema de referencia como parte de las decisiones de la rasterización.
+}
+
+::T1-S5-04:: ¿Qué produce la rasterización binaria, según el texto? {
+=Un ráster con apenas dos valores (típicamente 0 y 1) que informa presencia o ausencia #Correcto: es la definición exacta que da el texto para este abordaje.
+~Un ráster con tantos valores distintos como categorías tenga la tabla de atributos original #Incorrecto: eso describe a la rasterización categórica, no a la binaria.
+~Un ráster multibanda con una banda por cada atributo de la capa vectorial #Incorrecto: la rasterización binaria produce típicamente un único valor por celda, no un ráster multibanda.
+~Una capa vectorial simplificada, sin conversión a formato matricial #Incorrecto: rasterizar siempre produce una malla regular (formato ráster), no una capa vectorial.
+}
+
+::T1-S5-05:: ¿Qué hace la rasterización categórica que la rasterización binaria no hace? {
+=Traslada una columna numérica de la tabla de atributos como valor de celda, distinguiendo qué tipo de algo hay #Correcto: es la diferencia exacta que marca el texto entre ambos abordajes.
+~Genera siempre un ráster de menor resolución que la binaria #Incorrecto: el texto no vincula el tipo de rasterización con la resolución resultante.
+~Elimina automáticamente los valores NoData del resultado #Incorrecto: el manejo de NoData es una decisión aparte, no algo exclusivo de la rasterización categórica.
+~Convierte el resultado directamente a formato vectorial #Incorrecto: ambos abordajes (binario y categórico) producen un resultado en formato ráster, no vectorial.
+}
+
+::T1-S5-06:: ¿Cuál es el ejemplo de uso de la rasterización binaria que da el texto? {
+=Convertir un polígono de área protegida en una máscara para combinar con otras capas mediante álgebra de mapas #Correcto: es el ejemplo explícito que da el texto sobre este abordaje.
+~Convertir un código de especie forestal en valores de celda #Incorrecto: ese es el ejemplo que da el texto para la rasterización categórica, no para la binaria.
+~Convertir una imagen satelital en un polígono de cobertura #Incorrecto: eso describiría un proceso de vectorización, no de rasterización binaria.
+~Convertir una clase de uso del suelo en valores de celda #Incorrecto: ese ejemplo corresponde a la rasterización categórica, según el texto.
+}
+
+::T1-S5-07:: {T#Incorrecto: el texto lo afirma explícitamente en la última oración del párrafo sobre los dos abordajes de rasterización.#Correcto: el texto dice que "la versión binaria alcanza para preguntas de tipo sí/no, mientras que la categórica hace falta cuando el análisis necesita diferenciar clases".} La elección entre rasterización binaria y categórica depende del análisis que sigue a continuación.
+
+::T1-S5-08:: ¿Cómo se llama el valor especial que se asigna a los píxeles que no quedan cubiertos por ninguna geometría al rasterizar? {
+=NoData#Correcto: es el término exacto que usa el texto para ese valor especial.
+}
+
+::T1-S5-09:: ¿Cómo se llama el proceso inverso a rasterizar, cuando se convierte un ráster en vector? {
+=Vectorización #Correcto: es uno de los dos nombres que da el texto para este proceso inverso.
+~Reclasificación #Incorrecto: reclasificar es una operación de álgebra de mapas que cambia valores dentro de un mismo ráster, no una conversión de ráster a vector.
+~Remuestreo #Incorrecto: remuestrear es cambiar la resolución o alineación de un ráster, no convertirlo en vector.
+~Georreferenciación #Incorrecto: georreferenciar es asignarle coordenadas reales a un dato, no convertir ráster en vector.
+}
+
+::T1-S5-10:: En la vectorización, ¿qué se hace con las zonas del ráster que comparten un mismo valor o rango de valores? {
+=Se transforman en polígonos, o con menor frecuencia en líneas #Correcto: es lo que describe el texto como resultado del proceso de vectorización.
+~Se eliminan del ráster resultante #Incorrecto: esas zonas no se eliminan, se convierten en las geometrías del resultado vectorial.
+~Se fusionan en una sola celda de mayor tamaño #Incorrecto: fusionar celdas describiría más bien un cambio de resolución, no una vectorización.
+~Se convierten automáticamente en valores NoData #Incorrecto: NoData es el valor que se asigna a píxeles no cubiertos al rasterizar, no algo que ocurra al vectorizar.
+}
+
+::T1-S5-11:: ¿Qué limita la precisión de los polígonos resultantes de una vectorización, según el texto? {
+=La resolución del ráster de origen: una celda de 30 m no puede producir un borde más preciso que 30 m #Correcto: es la explicación exacta que da el texto sobre este costo de la vectorización.
+~El software utilizado para vectorizar, nunca la resolución del ráster #Incorrecto: el texto atribuye esta limitación a la resolución del ráster de origen, no al software.
+~La cantidad de bandas que tenga el ráster original #Incorrecto: la cantidad de bandas no es lo que determina la precisión de los bordes vectorizados; es la resolución espacial.
+~El tipo de dato (continuo o categórico) del ráster original #Incorrecto: esta limitación de precisión aplica por la resolución espacial, independientemente de si el dato es continuo o categórico.
+}
+
+::T1-S5-12:: ¿Qué tipo de bordes suelen aparecer al vectorizar un ráster, y que después hay que simplificar o generalizar? {
+=Bordes "escalonados" #Correcto: es el término exacto que usa el texto para describir este efecto.
+~Bordes perfectamente curvos #Incorrecto: la vectorización desde un ráster produce bordes escalonados por la geometría de la grilla, no curvas suaves.
+~Bordes duplicados #Incorrecto: el texto no describe este problema como duplicación de bordes, sino como un efecto de escalonado.
+~Bordes invisibles #Incorrecto: los bordes vectorizados son visibles, solo que quedan escalonados por la resolución de origen.
+}
+
+::T1-S5-13:: ¿En cuáles de las siguientes situaciones tiene sentido vectorizar un ráster, según el texto? {
+~%25%Cuando se necesita medir distancias con precisión #Correcto: es una de las situaciones que menciona el texto donde conviene vectorizar.
+~%25%Cuando se necesita calcular áreas exactas de polígonos #Correcto: es otra de las situaciones mencionadas en el texto.
+~%25%Cuando se necesita hacer consultas de atributos #Correcto: también aparece explícitamente en el texto como razón para vectorizar.
+~%25%Cuando se necesita combinar el resultado con otras capas vectoriales #Correcto: es la cuarta situación que menciona el texto.
+~%-100%Cuando se necesita aplicar álgebra de mapas celda a celda #Incorrecto: esa es justamente la razón para rasterizar, no para vectorizar, según el texto.
+}
+
+::T1-S5-14:: Según la regla general que plantea el texto, ¿cuándo conviene rasterizar? {
+=Cuando se necesita operar matemáticamente sobre el espacio #Correcto: es la síntesis exacta que ofrece el texto al cierre de esta sección.
+~Cuando se necesita discretizar un resultado en entidades con geometría exacta #Incorrecto: esa es la regla que da el texto para cuándo conviene vectorizar, no rasterizar.
+~Cuando el dato original ya viene en formato ráster #Incorrecto: el texto aclara que el sentido de la conversión depende del análisis que sigue, no del formato original de los datos.
+~Cuando se necesita reducir el tamaño del archivo #Incorrecto: el tamaño de archivo no es el criterio que da el texto para decidir si conviene rasterizar.
+}
+
+::T1-S5-15:: Según la regla general que plantea el texto, ¿cuándo conviene vectorizar? {
+=Cuando se necesita discretizar un resultado en entidades con geometría exacta y atributos propios #Correcto: es la síntesis exacta que ofrece el texto al cierre de esta sección.
+~Cuando se necesita operar matemáticamente sobre el espacio #Incorrecto: esa es la regla que da el texto para cuándo conviene rasterizar, no vectorizar.
+~Cuando el dato original ya viene en formato vectorial #Incorrecto: el texto aclara que el sentido de la conversión depende del análisis que sigue, no del formato original.
+~Cuando se necesita aplicar filtros de vecindad #Incorrecto: los filtros de vecindad son operaciones típicas sobre ráster, no una razón para vectorizar.
+}
+
+::T1-S5-16:: {F#Incorrecto: el texto dice exactamente lo contrario: "el sentido en el que conviene convertir depende siempre del análisis que sigue a continuación, nunca del formato en el que llegaron los datos originalmente".#Correcto: el texto es explícito en que la dirección de conversión depende del análisis siguiente, no del formato original de los datos.} El sentido en que conviene convertir (rasterizar o vectorizar) depende del formato en el que llegaron originalmente los datos.
+
+::T1-S5-17:: Relacione cada proceso con su descripción. {
+=Rasterización binaria -> Produce un ráster de dos valores que indica presencia o ausencia
+=Rasterización categórica -> Traslada una columna de la tabla de atributos como valor de celda
+=Vectorización -> Convierte zonas de igual valor en polígonos o líneas
+}
+
+::T1-S5-18:: ¿Por qué la vectorización "también tiene un costo, aunque distinto" al de la rasterización, según el texto? {
+=Porque los límites de los polígonos quedan condicionados por la resolución del ráster de origen, con bordes escalonados que hay que simplificar #Correcto: es la explicación exacta que da el texto sobre este costo particular de la vectorización.
+~Porque siempre requiere eliminar las bandas espectrales del ráster original #Incorrecto: el texto no menciona esto como parte del costo de vectorizar; el costo tiene que ver con la precisión geométrica de los bordes.
+~Porque genera automáticamente valores NoData en el resultado #Incorrecto: NoData es un concepto asociado a la rasterización, no un costo propio de la vectorización.
+~Porque no permite conservar ningún atributo del ráster original #Incorrecto: el texto no plantea esa limitación; el costo señalado es la pérdida de precisión geométrica en los bordes.
+}
+
+$CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/6. Por qué es importante el análisis ráster
+
+::T1-S6-01:: ¿Qué es el álgebra de mapas, según el texto? {
+=Realizar operaciones matemáticas o lógicas entre rásteres, celda a celda #Correcto: es la definición exacta que da el texto para el álgebra de mapas.
+~Realizar operaciones matemáticas entre capas vectoriales, entidad a entidad #Incorrecto: el álgebra de mapas es una operación propia del formato ráster, no del vectorial.
+~Calcular automáticamente el sistema de referencia óptimo para un ráster #Incorrecto: eso no tiene relación con la definición de álgebra de mapas que da el texto.
+~Convertir rásteres categóricos en rásteres continuos #Incorrecto: esa conversión no es lo que define al álgebra de mapas; el álgebra de mapas son operaciones celda a celda entre rásteres.
+}
+
+::T1-S6-02:: En álgebra de mapas, ¿de qué depende el valor de cada píxel de la capa de salida, según el texto? {
+=De aplicar una operación sobre los píxeles que ocupan esa misma posición geográfica en las capas de entrada #Correcto: es la definición exacta que da el texto sobre el funcionamiento celda a celda del álgebra de mapas.
+~De un promedio general de todos los píxeles del ráster de entrada #Incorrecto: el cálculo es celda a celda, comparando la misma posición geográfica, no un promedio general del ráster completo.
+~De un valor fijo definido manualmente por el usuario para toda la capa #Incorrecto: el valor de cada píxel de salida surge de la operación aplicada, no de un valor fijo asignado a toda la capa.
+~De la cantidad de bandas que tenga el ráster de entrada #Incorrecto: la cantidad de bandas no determina el valor resultante; lo que importa es la posición geográfica compartida entre capas.
+}
+
+::T1-S6-03:: ¿Cuáles de las siguientes son operaciones típicas de álgebra de mapas mencionadas en el texto? {
+~%25%Sumar rásteres #Correcto: es una de las operaciones típicas de álgebra de mapas que menciona el texto.
+~%25%Aplicar filtros #Correcto: también aparece explícitamente como operación típica en el texto.
+~%25%Reclasificar valores #Correcto: es otra de las operaciones mencionadas en el texto.
+~%25%Identificar zonas que cumplen varias condiciones simultáneamente #Correcto: es la cuarta operación típica que menciona el texto.
+~%-100%Crear una tabla de atributos para el ráster #Incorrecto: esta opción es falsa; el álgebra de mapas no crea tablas de atributos, ya que el ráster no tiene ese tipo de estructura.
+}
+
+::T1-S6-04:: ¿Cuál es el ejemplo simple de análisis mediante álgebra de mapas que da el texto? {
+=Seleccionar las áreas con pendiente superior al 10 % #Correcto: es el ejemplo explícito que da el texto de un análisis sencillo mediante álgebra de mapas.
+~Delimitar cuerpos de agua a partir de una clasificación #Incorrecto: ese ejemplo aparece más adelante en el texto, como caso de vectorización, no como ejemplo de álgebra de mapas simple.
+~Calcular la resolución espectral óptima de un sensor #Incorrecto: ese cálculo no aparece en el texto como ejemplo de álgebra de mapas.
+~Convertir un polígono en una máscara binaria #Incorrecto: ese es el ejemplo de rasterización binaria, no de álgebra de mapas.
+}
+
+::T1-S6-05:: ¿Cuáles de los siguientes son ejemplos de modelos más complejos que se pueden escalar a partir del álgebra de mapas, según el texto? {
+~%25%Evaluación multicriterio #Correcto: es uno de los modelos complejos que menciona el texto.
+~%25%Aptitud territorial #Correcto: es otro de los modelos complejos mencionados en el texto.
+~%25%Análisis de accesibilidad #Correcto: también aparece explícitamente en el texto.
+~%25%Simulaciones de procesos espaciales #Correcto: es el cuarto ejemplo de modelo complejo mencionado en el texto.
+~%-100%Digitalización de mapas históricos en papel #Incorrecto: la digitalización de cartografía histórica no se menciona en el texto como ejemplo derivado del álgebra de mapas.
+}
+
+::T1-S6-06:: {F#Incorrecto: el texto describe una enorme variedad de operaciones posibles, aplicadas sobre múltiples rásteres a la vez (por ejemplo, sumar dos capas o combinar varias condiciones).#Correcto: el texto describe una enorme variedad de operaciones, que pueden combinar varios rásteres a la vez, como sumar capas o identificar zonas que cumplen varias condiciones simultáneamente.} El álgebra de mapas solo permite aplicar una única operación matemática a la vez sobre un único ráster.
+
+::T1-S6-07:: ¿Qué combinación convierte al ráster en una base poderosa para explorar y modelar el territorio, según el texto? {
+=Su estructura regular combinada con su integración natural con operaciones matemáticas #Correcto: es la síntesis exacta que ofrece el texto al final de esta sección.
+~Su bajo peso de archivo combinado con su alta resolución espectral #Incorrecto: el texto no atribuye esta capacidad al peso del archivo ni a la resolución espectral, sino a la regularidad estructural y la integración matemática.
+~Su tabla de atributos combinada con su capacidad de almacenar texto libre #Incorrecto: el ráster no tiene tabla de atributos; esta no es la explicación que da el texto.
+~Su compatibilidad exclusiva con Python combinada con su bajo costo #Incorrecto: el texto no menciona ningún lenguaje de programación específico como razón de esta capacidad.
+}
+
+::T1-S6-08:: ¿Qué mecánica simple, según el texto, permite escalar desde análisis sencillos hasta modelos bastante más complejos? {
+=Repetir la misma operación en cada una de miles o millones de celdas #Correcto: es la mecánica exacta que describe el texto como base de esa capacidad de escalado.
+~Aumentar manualmente la resolución espacial del ráster #Incorrecto: el texto no vincula esta capacidad de escalado con un aumento de resolución, sino con la repetición de la misma operación celda a celda.
+~Convertir todos los rásteres a formato vectorial antes de analizarlos #Incorrecto: es lo contrario de lo que describe el texto: el álgebra de mapas se aplica sobre rásteres, no requiere convertirlos a vector.
+~Reducir la cantidad de bandas del ráster de entrada #Incorrecto: la cantidad de bandas no es la mecánica que explica esta capacidad de escalado, según el texto.
+}
+
+::T1-S6-09:: {F#Incorrecto: el texto señala en la sección de beneficios y debilidades que esta es justamente una capacidad que el modelo vectorial no resuelve de forma nativa.#Correcto: el texto indica que el álgebra de mapas es "algo que el modelo vectorial no resuelve de forma nativa", a diferencia del ráster.} El álgebra de mapas es una capacidad que el modelo vectorial resuelve de forma tan directa como el modelo ráster.
+
+::T1-S6-10:: ¿Por qué el álgebra de mapas resulta "sencilla y eficiente" de aplicar sobre datos ráster, según el texto? {
+=Porque consiste en repetir la misma operación celda a celda en toda la grilla regular #Correcto: esa regularidad y repetición es la base de la eficiencia que señala el texto.
+~Porque los rásteres siempre pesan menos que las capas vectoriales #Incorrecto: el texto no atribuye la eficiencia del álgebra de mapas al peso del archivo, sino a la regularidad de la grilla.
+~Porque no requiere ningún tipo de procesamiento por parte del software #Incorrecto: el álgebra de mapas sí requiere procesamiento; lo que la hace eficiente es la simplicidad de repetir la misma operación en cada celda.
+~Porque solo puede aplicarse sobre rásteres categóricos #Incorrecto: el álgebra de mapas se aplica tanto sobre datos continuos como categóricos, no está limitada a los categóricos.
+}
+
+::T1-S6-11:: ¿Qué transforma el álgebra de mapas en una "estructura central" para el análisis territorial de la cursada, según el texto? {
+=Su capacidad de aplicar, de forma sencilla y eficiente, una enorme variedad de operaciones espaciales automatizadas #Correcto: es la afirmación textual que abre esta sección del texto.
+~Que es la única forma posible de analizar datos geoespaciales #Incorrecto: el texto no plantea que sea la única forma posible; reconoce al vector como otro modelo válido, con sus propias fortalezas.
+~Que reemplaza por completo a la interpolación y al análisis de paisaje #Incorrecto: el álgebra de mapas es una herramienta entre varias que se van a ver en la cursada, no un reemplazo de esas otras técnicas.
+~Que solo puede aplicarse a escala global #Incorrecto: el texto no restringe el álgebra de mapas a una escala específica; se puede aplicar en distintas escalas de análisis.
+}
+
+::T1-S6-12:: ¿Cómo se llama, en conjunto, el grupo de operaciones matemáticas o lógicas aplicadas celda a celda entre rásteres? {
+=álgebra de mapas#Correcto: es el término exacto que usa el texto para este conjunto de operaciones.
+}
+
+::T1-S6-13:: En la definición de álgebra de mapas, "celda a celda" implica que: {
+=Cada píxel de salida se calcula de forma independiente, a partir de los píxeles en la misma posición de las capas de entrada #Correcto: es exactamente lo que describe el texto sobre esta mecánica de cálculo.
+~Cada píxel de salida depende del valor de todos los píxeles del ráster, sin importar su posición #Incorrecto: el cálculo es posicional, basado en la misma ubicación geográfica en las capas de entrada, no en todos los píxeles del ráster.
+~Cada píxel de salida se calcula una sola vez para todo el ráster, sin importar la posición #Incorrecto: el cálculo se repite celda por celda, no una única vez para todo el ráster.
+~Cada píxel de salida depende exclusivamente de su banda espectral #Incorrecto: la definición de álgebra de mapas no se limita a bandas espectrales; aplica a cualquier tipo de valor ráster.
+}
+
+::T1-S6-14:: Además de la evaluación multicriterio, ¿qué otro tipo de análisis territorial complejo se menciona en el texto como posible gracias al álgebra de mapas? {
+=Simulaciones de procesos espaciales #Correcto: es uno de los ejemplos adicionales que menciona el texto, junto con aptitud territorial y análisis de accesibilidad.
+~Digitalización de cartografía histórica #Incorrecto: ese proceso no se menciona en el texto en relación con el álgebra de mapas.
+~Compresión de archivos ráster #Incorrecto: la compresión es un tema técnico distinto, que el texto anuncia para el Texto VIII, no un modelo de análisis territorial.
+~Georreferenciación de imágenes escaneadas #Incorrecto: la georreferenciación tampoco aparece en el texto vinculada al álgebra de mapas.
+}
+
+$CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/7. Beneficios y debilidades del modelo ráster
+
+::T1-S7-01:: ¿Cuáles de las siguientes son ventajas del modelo ráster mencionadas en el texto? {
+~%25%Permite operar matemáticamente sobre el espacio de forma directa #Correcto: es una de las ventajas explícitas que menciona el texto.
+~%25%Representa muy bien los fenómenos continuos #Correcto: es otra de las ventajas mencionadas explícitamente.
+~%25%Su estructura regular simplifica el procesamiento y el análisis a gran escala #Correcto: también aparece como ventaja en el texto.
+~%25%Es el formato nativo de la mayoría de las fuentes de datos satelitales #Correcto: es la cuarta ventaja que menciona el texto.
+~%-100%Tiene tabla de atributos nativa, igual que el vector #Incorrecto: esta opción es falsa; el texto señala justamente lo contrario en la sección de debilidades: el ráster no tiene tabla de atributos.
+}
+
+::T1-S7-02:: ¿Por qué el ráster representa muy bien los fenómenos continuos, como la altitud o la temperatura, según el texto? {
+=Porque ahí no existen límites discretos "reales" que se pudieran dibujar con un vector #Correcto: es la explicación exacta que da el texto para esta ventaja.
+~Porque esos fenómenos siempre tienen menor resolución espacial #Incorrecto: la resolución espacial no es la razón que da el texto; la clave es la ausencia de bordes reales en esos fenómenos.
+~Porque el vector no puede almacenar ningún tipo de valor numérico #Incorrecto: el vector sí puede almacenar valores numéricos en su tabla de atributos; el punto es que no hay bordes reales que dibujar en un fenómeno continuo.
+~Porque esos fenómenos solo pueden medirse con sensores satelitales #Incorrecto: los fenómenos continuos pueden obtenerse también por interpolación u otros métodos, no exclusivamente con sensores satelitales.
+}
+
+::T1-S7-03:: ¿Qué ventaja tiene la estructura regular del ráster para el análisis a gran escala (regional, continental o global), según el texto? {
+=Simplifica el procesamiento y la combinación de capas, donde millones de geometrías vectoriales serían inmanejables #Correcto: es la ventaja exacta que señala el texto para el análisis a gran escala.
+~Reduce automáticamente la resolución espectral necesaria #Incorrecto: el texto no relaciona esta ventaja con la resolución espectral.
+~Elimina la necesidad de contar con un sistema de referencia común #Incorrecto: el sistema de referencia sigue siendo necesario en cualquier análisis a gran escala, ráster o vectorial.
+~Permite prescindir completamente de datos categóricos #Incorrecto: el análisis a gran escala puede incluir tanto datos continuos como categóricos; esta ventaja no depende de prescindir de los categóricos.
+}
+
+::T1-S7-04:: {F#Incorrecto: el texto dice explícitamente que el álgebra de mapas es "algo que el modelo vectorial no resuelve de forma nativa".#Correcto: el texto es claro en que el vector no resuelve el álgebra de mapas de forma nativa, a diferencia del ráster.} El álgebra de mapas es una capacidad que el modelo vectorial resuelve de forma nativa, igual que el ráster.
+
+::T1-S7-05:: Según el texto, ¿cuál es el formato nativo de la inmensa mayoría de las fuentes de datos satelitales y de sensores remotos? {
+=El ráster #Correcto: el texto lo señala explícitamente como "dato práctico nada menor" a favor del modelo ráster.
+~El vector #Incorrecto: es al revés según el texto: el ráster es el formato nativo predominante de esas fuentes, no el vector.
+~Ninguno de los dos: se usa un formato tabular independiente #Incorrecto: el texto es explícito en que el formato nativo de esas fuentes es el ráster.
+~Depende exclusivamente del país de origen del satélite #Incorrecto: el texto no plantea esta dependencia; señala al ráster como formato nativo predominante, en general.
+}
+
+::T1-S7-06:: ¿Cuáles de las siguientes son debilidades del modelo ráster mencionadas en el texto? {
+~%25%La precisión geométrica de sus bordes está limitada por el tamaño de celda #Correcto: es una de las debilidades explícitas que menciona el texto.
+~%25%No tiene tabla de atributos #Correcto: es otra debilidad mencionada explícitamente en el texto.
+~%25%El tamaño de archivo crece rápido con la resolución y la extensión #Correcto: también aparece como debilidad en el texto.
+~%25%Representar fenómenos discretos con límites exactos agrega un error que el vector no tiene #Correcto: es la cuarta debilidad que menciona el texto.
+~%-100%Tiene dificultad para representar fenómenos continuos como la temperatura #Incorrecto: esta opción es falsa; representar bien los fenómenos continuos es justamente una de las ventajas del ráster, según el texto.
+}
+
+::T1-S7-07:: ¿Qué le puede pasar a un límite real del terreno cuando se representa en formato ráster, según el texto? {
+=Puede quedar "escalonado", o desplazado hasta media celda respecto de su posición verdadera #Correcto: es la debilidad exacta que describe el texto sobre la precisión geométrica del ráster.
+~Se vuelve automáticamente más preciso que en formato vectorial #Incorrecto: es lo contrario de lo que dice el texto: la precisión geométrica del ráster queda limitada por el tamaño de celda.
+~Desaparece por completo del ráster resultante #Incorrecto: el límite no desaparece, simplemente puede perder precisión geométrica al quedar condicionado por el tamaño de celda.
+~Se convierte automáticamente en un valor NoData #Incorrecto: NoData se refiere a celdas sin información, no a la pérdida de precisión geométrica de un límite real.
+}
+
+::T1-S7-08:: ¿Qué le falta al ráster que sí tiene el modelo vectorial, según la sección de debilidades del texto? {
+=Una tabla de atributos #Correcto: es la debilidad central que desarrolla el texto en esta sección y en la siguiente.
+~Un sistema de referencia espacial #Incorrecto: el ráster sí tiene sistema de referencia espacial, igual que el vector.
+~La capacidad de representar datos continuos #Incorrecto: al contrario, representar datos continuos es una fortaleza del ráster, no una debilidad frente al vector.
+~La posibilidad de combinarse con otras capas #Incorrecto: el texto no señala esto como una debilidad; de hecho, la combinación de capas es más simple en ráster, según la sección de ventajas.
+}
+
+::T1-S7-09:: ¿Por qué el tamaño de archivo de un ráster crece rápido con la resolución y la extensión, incluso en zonas donde el fenómeno no varía, según el texto? {
+=Porque cada celda ocupa espacio de almacenamiento sin importar si su valor cambia, a diferencia del vector, que solo "gasta" espacio donde hay geometría #Correcto: es la explicación exacta que da el texto sobre esta debilidad.
+~Porque los rásteres siempre se almacenan sin ningún tipo de compresión #Incorrecto: el texto no vincula esta debilidad a la ausencia de compresión, sino a que toda celda ocupa espacio, varíe o no el fenómeno.
+~Porque cada celda necesita guardar su propia tabla de atributos #Incorrecto: el ráster no tiene tabla de atributos por celda; ese no es el motivo que da el texto para esta debilidad.
+~Porque la resolución espectral siempre aumenta junto con la extensión #Incorrecto: la resolución espectral es independiente de la extensión del ráster; no es la explicación que da el texto.
+}
+
+::T1-S7-10:: {T#Incorrecto: el texto lo afirma explícitamente al contrastar ambos modelos en la sección de debilidades del ráster.#Correcto: el texto dice que el vector "solo 'gasta' espacio donde efectivamente hay geometría", a diferencia del ráster.} El vector, a diferencia del ráster, solo ocupa espacio de almacenamiento donde efectivamente hay geometría representada.
+
+::T1-S7-11:: ¿Qué ocurre cuando se representa en formato ráster un fenómeno discreto con límites exactos, como un lote catastral, según el texto? {
+=Se agrega un error que el vector, por definición, no tiene #Correcto: es la conclusión exacta que da el texto sobre este punto, al cierre de la sección de debilidades.
+~El resultado siempre queda con mayor precisión que en formato vectorial #Incorrecto: es lo contrario de lo que afirma el texto para este tipo de fenómenos.
+~Se pierde automáticamente la posibilidad de calcular su área #Incorrecto: el texto no plantea esa pérdida; lo que señala es un error de precisión geométrica, no la imposibilidad de calcular áreas.
+~El fenómeno deja de poder representarse en cualquier formato #Incorrecto: el fenómeno sí puede representarse, tanto en vector (con precisión) como en ráster (con el error de discretización que señala el texto).
+}
+
+::T1-S7-12:: Según el texto, ¿es el modelo ráster superior al vectorial en abstracto? {
+=No: ningún modelo es superior al otro en abstracto; son herramientas distintas, con ventajas y límites distintos #Correcto: es la afirmación explícita con la que el texto abre esta sección.
+~Sí: el ráster siempre es preferible por su capacidad de álgebra de mapas #Incorrecto: el texto rechaza explícitamente esta idea de superioridad absoluta de un modelo sobre el otro.
+~Sí: el ráster siempre es preferible porque pesa menos que el vector #Incorrecto: el texto señala lo contrario respecto del peso de archivo, y de todos modos rechaza la idea de superioridad absoluta.
+~No: el modelo vectorial es siempre superior al ráster #Incorrecto: el texto tampoco afirma la superioridad absoluta del vector; ambos modelos tienen ventajas y límites distintos según el caso.
+}
+
+::T1-S7-13:: Relacione cada afirmación con si describe una ventaja o una debilidad del modelo ráster, según el texto. {
+="Opera matemáticamente sobre el espacio de forma directa" -> Ventaja
+="No tiene tabla de atributos" -> Debilidad
+="Representa muy bien los fenómenos continuos" -> Ventaja
+="La precisión de sus bordes está limitada por el tamaño de celda" -> Debilidad
+}
+
+::T1-S7-14:: Según el texto, ¿qué se necesita saber como parte del criterio profesional que deja esta materia respecto de vector y ráster? {
+=Saber cuándo conviene usar cada modelo #Correcto: es la afirmación explícita del texto sobre el "criterio profesional" que deja la materia.
+~Saber programar exclusivamente en Python para manipular ambos modelos #Incorrecto: el texto no vincula este criterio profesional con un lenguaje de programación en particular.
+~Memorizar todas las resoluciones posibles de cada sensor satelital #Incorrecto: el criterio profesional que señala el texto es sobre cuándo usar cada modelo de datos, no sobre memorizar resoluciones de sensores.
+~Elegir siempre el ráster por sobre el vector, sin excepciones #Incorrecto: el texto rechaza explícitamente la idea de que un modelo sea siempre superior al otro.
+}
+
+::T1-S7-15:: ¿Cuál de las siguientes es una consecuencia directa de que el ráster no tenga tabla de atributos, según el texto? {
+=Cada celda es apenas un número, sin capacidad nativa de guardar múltiples atributos descriptivos por unidad #Correcto: es la consecuencia exacta que describe el texto sobre esta debilidad.
+~El ráster no puede tener ningún tipo de metadato asociado #Incorrecto: el texto aclara que sí puede haber metadatos, aunque viven en archivos auxiliares separados, no dentro de una tabla de atributos.
+~El ráster no puede combinarse nunca con capas vectoriales #Incorrecto: el texto no plantea esta limitación; ráster y vector se combinan constantemente en un proyecto SIG.
+~El ráster pierde automáticamente su sistema de referencia espacial #Incorrecto: la ausencia de tabla de atributos no tiene relación con la pérdida del sistema de referencia.
+}
+
+::T1-S7-16:: {F#Incorrecto: el texto dice justamente lo contrario: el ráster es el modelo más apto para representar fenómenos continuos, precisamente porque ahí no hay bordes reales que el vector pudiera dibujar con precisión.#Correcto: los fenómenos continuos no tienen bordes reales que el vector pueda representar con exactitud; por eso el ráster resulta más apto para ese caso, según el texto.} Representar un fenómeno continuo como la temperatura en formato vectorial sería más preciso que representarlo en formato ráster.
+
+$CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/8. Cuidados prácticos al manipular archivos ráster
+
+::T1-S8-01:: ¿Cuál es la diferencia práctica más importante entre trabajar con vector y con ráster, según el texto? {
+=Que un ráster no tiene tabla de atributos #Correcto: es la diferencia que el texto presenta como "quizás la diferencia práctica más importante" entre ambos modelos.
+~Que un ráster no puede tener sistema de referencia #Incorrecto: todo ráster tiene sistema de referencia, igual que un vector; esa no es la diferencia que señala el texto.
+~Que un ráster no puede combinarse con capas vectoriales #Incorrecto: el texto no plantea esta limitación en ningún momento; de hecho, ambos modelos se combinan constantemente.
+~Que un ráster no puede visualizarse en QGIS #Incorrecto: un ráster sí puede visualizarse en QGIS con normalidad; la diferencia señalada por el texto es la ausencia de tabla de atributos.
+}
+
+::T1-S8-02:: Sin tabla de atributos, ¿cuál es el recurso más importante para saber qué representa un ráster, según el texto? {
+=El nombre del archivo #Correcto: el texto lo señala como "el más importante, con diferencia" de los recursos disponibles.
+~El color con el que se visualiza en el software #Incorrecto: el color de visualización es configurable y no aporta información fiable sobre qué representa el dato.
+~El tamaño en megabytes del archivo #Incorrecto: el tamaño del archivo no comunica qué representa el dato ráster.
+~La cantidad de bandas que tiene el archivo #Incorrecto: la cantidad de bandas da alguna pista, pero el texto señala al nombre del archivo como el recurso más importante.
+}
+
+::T1-S8-03:: {T#Incorrecto: el texto usa exactamente ese ejemplo para mostrar que un nombre genérico "no le va a decir absolutamente nada a nadie".#Correcto: el texto usa 'raster1.tif' como ejemplo explícito de nombre que no comunica nada sobre el dato que contiene.} Un archivo llamado "raster1.tif" comunica claramente qué representa el dato que contiene.
+
+::T1-S8-04:: Según el ejemplo del texto, ¿qué información comunica un nombre de archivo bien construido como "temp_media_ene2024_MODIS_1km.tif"? {
+~%25%Variable #Correcto: el nombre comunica que la variable es la temperatura media.
+~%25%Fecha #Correcto: el nombre comunica que corresponde a enero de 2024.
+~%25%Fuente #Correcto: el nombre indica que la fuente es MODIS.
+~%25%Resolución #Correcto: el nombre indica una resolución de 1 km.
+~%-100%El sistema operativo con el que se generó el archivo #Incorrecto: el nombre del archivo no comunica el sistema operativo utilizado; esa no es una de las cuatro piezas de información que señala el texto.
+}
+
+::T1-S8-05:: Al definir una convención de nombres para archivos ráster, ¿qué conviene incluir según el texto? {
+~%25%Qué representa el dato #Correcto: es uno de los cuatro elementos que recomienda incluir el texto.
+~%25%Con qué unidad o método se generó #Correcto: es otro de los elementos recomendados por el texto.
+~%25%De qué fecha o período proviene #Correcto: también aparece como recomendación explícita del texto.
+~%25%A qué resolución o fuente corresponde #Correcto: es el cuarto elemento recomendado por el texto.
+~%-100%La contraseña de acceso al archivo #Incorrecto: esta opción es falsa; el texto no menciona contraseñas como parte de la convención de nombres.
+}
+
+::T1-S8-06:: Cuando el nombre del archivo no alcanza para transmitir toda la información necesaria, ¿qué otro recurso puede cumplir una función parecida, según el texto? {
+=La estructura de carpetas, organizada por variable, fecha o fuente #Correcto: es el segundo recurso que menciona explícitamente el texto.
+~Un archivo de contraseña asociado al proyecto #Incorrecto: el texto no menciona archivos de contraseña como recurso de documentación.
+~La resolución radiométrica del ráster #Incorrecto: la resolución radiométrica es una propiedad técnica del dato, no un recurso de documentación como el que describe el texto.
+~El color de simbología asignado en el proyecto SIG #Incorrecto: la simbología es configurable y no cumple la función de documentar el dato, según el texto.
+}
+
+::T1-S8-07:: ¿Qué extensión de archivo asociado a un GeoTIFF guarda estadísticas y metadatos, según el texto? {
+=.aux.xml#Correcto: es la extensión que menciona el texto para estadísticas y metadatos asociados a un GeoTIFF.
+}
+
+::T1-S8-08:: ¿Qué extensión de archivo asociado a un GeoTIFF guarda la georreferenciación (el "world file"), según el texto? {
+=.tfw#Correcto: es la extensión exacta que menciona el texto para el world file.
+}
+
+::T1-S8-09:: ¿Qué extensión de archivo asociado a un GeoTIFF guarda las pirámides, según el texto? {
+=.ovr#Correcto: es la extensión exacta que menciona el texto para las pirámides (desarrolladas en detalle en el Texto VIII).
+}
+
+::T1-S8-10:: ¿Qué pasa si se copia o comparte solamente el archivo .tif y se dejan atrás sus archivos auxiliares, según el texto? {
+=Se pierde esa información adicional, aunque el ráster en sí siga siendo perfectamente legible #Correcto: es la consecuencia exacta que describe el texto sobre este escenario.
+~El archivo .tif deja de poder abrirse en cualquier software #Incorrecto: el texto aclara que el ráster "en sí mismo" sigue siendo perfectamente legible; lo que se pierde es la información adicional de los archivos auxiliares.
+~Se corrompen automáticamente los valores de las celdas #Incorrecto: el texto no plantea corrupción de los valores del ráster, sino pérdida de metadatos y georreferenciación auxiliar.
+~No hay ninguna consecuencia, toda la información viaja siempre dentro del .tif #Incorrecto: es lo contrario de lo que dice el texto: los archivos auxiliares son "archivos separados del ráster principal".
+}
+
+::T1-S8-11:: En proyectos más grandes, ¿qué recurso adicional puede hacer falta para documentar el procesamiento aplicado a cada capa derivada, según el texto? {
+=Un documento o una planilla de registro, una bitácora #Correcto: es el tercer recurso adicional que menciona explícitamente el texto para proyectos grandes.
+~Un servidor dedicado exclusivamente al almacenamiento de rásteres #Incorrecto: el texto no menciona la necesidad de un servidor dedicado como recurso de documentación.
+~Una licencia de software específica para cada capa #Incorrecto: las licencias de software no son el recurso de documentación que menciona el texto.
+~Una capa vectorial que acompañe a cada ráster #Incorrecto: el texto no propone acompañar cada ráster con una capa vectorial como forma de documentación.
+}
+
+::T1-S8-12:: ¿Cuál es el riesgo concreto de no tomar estos cuidados con el tiempo, según el texto? {
+=Terminar con carpetas llenas de archivos con nombres genéricos, cuyo contenido solo se puede reconstruir abriéndolos uno por uno #Correcto: es el riesgo exacto que describe el texto al cierre de esta sección.
+~Que el software de SIG deje de reconocer el formato del archivo #Incorrecto: el texto no plantea un problema de compatibilidad de formato, sino de pérdida de trazabilidad sobre qué representa cada archivo.
+~Que el ráster pierda automáticamente su sistema de referencia espacial #Incorrecto: el riesgo señalado por el texto es de documentación y trazabilidad, no de pérdida del sistema de referencia.
+~Que se dupliquen automáticamente los valores de las celdas #Incorrecto: el texto no menciona duplicación de valores como consecuencia de no documentar bien los archivos.
+}
+
+::T1-S8-13:: {T#Incorrecto: el texto lo afirma explícitamente al comparar ambos modelos en esta sección.#Correcto: el texto dice que "este problema prácticamente no existe en vector, precisamente porque ahí la tabla de atributos documenta el dato desde adentro".} El problema de perder la trazabilidad de qué representa un archivo prácticamente no existe en vector, porque la tabla de atributos documenta el dato desde adentro.
+
+::T1-S8-14:: En el modelo ráster, ¿de qué depende enteramente la documentación de un dato, según el texto? {
+=De la disciplina de quien lo generó #Correcto: es la conclusión exacta con la que cierra el texto esta sección.
+~Del software específico que se use para abrirlo #Incorrecto: el texto no atribuye la documentación al software utilizado, sino a la disciplina de quien generó el dato.
+~De si el ráster es monobanda o multibanda #Incorrecto: ser monobanda o multibanda no determina si el dato queda bien documentado o no.
+~Del sistema de referencia espacial elegido #Incorrecto: el sistema de referencia no tiene relación con la documentación del contenido del ráster.
+}
+
+::T1-S8-15:: Relacione cada recurso con lo que aporta para documentar un ráster, según el texto. {
+=Nombre del archivo -> Variable, fecha, fuente y resolución con solo leerlo
+=Estructura de carpetas -> Organización por variable, fecha o fuente
+=Metadatos y archivos auxiliares (.aux.xml, .tfw, .ovr) -> Estadísticas, georreferenciación y pirámides
+=Bitácora o planilla de registro -> Qué procesamiento se aplicó a cada capa derivada
+}
+
+::T1-S8-16:: ¿Por qué una capa vectorial de rutas puede tener columnas como "numero_ruta" o "estado", mientras un ráster no puede tener algo equivalente, según el texto? {
+=Porque el ráster es solamente una matriz de números, sin ninguna columna donde anotar esa información #Correcto: es la explicación exacta que da el texto sobre esta diferencia estructural.
+~Porque los rásteres no pueden asociarse a ningún archivo externo #Incorrecto: los rásteres sí pueden asociarse a archivos externos (metadatos, auxiliares), aunque eso no reemplaza a una tabla de atributos.
+~Porque las rutas nunca se representan en formato ráster #Incorrecto: las rutas sí pueden representarse en formato ráster (por ejemplo, tras una rasterización), pero seguirían sin tener tabla de atributos.
+~Porque el vector no permite almacenar texto en sus columnas #Incorrecto: es al revés: el vector sí permite almacenar texto en sus columnas, como "estado"; esa es justamente la ventaja que no tiene el ráster.
+}
+
+::T1-S8-17:: ¿Qué le puede pasar a alguien que recibe un ráster generado por otra persona que no tomó estos cuidados, según el texto? {
+=No poder reconstruir qué representa el dato ni siquiera abriéndolo, si además falta la unidad o la fecha #Correcto: es el escenario de riesgo exacto que describe el texto al cierre de esta sección.
+~Perder automáticamente el acceso al archivo #Incorrecto: el archivo sigue siendo accesible y legible; el problema es no poder interpretar qué representa el contenido.
+~Que el ráster cambie de resolución espacial de forma automática #Incorrecto: la resolución espacial no se ve afectada por la falta de documentación; el problema es de interpretación del contenido.
+~Que el software rechace abrir el archivo por falta de metadatos #Incorrecto: el texto aclara que el ráster en sí sigue siendo perfectamente legible, aunque se pierda información sobre qué representa.
+}
+
+$CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/9. De dónde provienen los datos ráster
+
+::T1-S9-01:: ¿Qué es el SRTM, según el texto? {
+=Un modelo de elevación (Shuttle Radar Topography Mission) #Correcto: es la definición exacta que da el texto sobre esta fuente de datos.
+~Una imagen satelital multiespectral #Incorrecto: el SRTM es un modelo de elevación, no una imagen satelital multiespectral como Sentinel-2 o Landsat.
+~Un producto derivado del análisis de vegetación #Incorrecto: el SRTM es una fuente primaria de datos de elevación, no un producto derivado como el NDVI.
+~Una plataforma de procesamiento en la nube #Incorrecto: el SRTM es un conjunto de datos de elevación, no una plataforma de procesamiento como Google Earth Engine.
+}
+
+::T1-S9-02:: ¿Cuál es la resolución espacial del SRTM, en metros, según el texto? {#30:0#Correcto: el texto indica explícitamente que el SRTM tiene 30 m de resolución.}
+
+::T1-S9-03:: ¿Dónde está disponible el SRTM, según el texto? {
+=USGS EarthExplorer #Correcto: es la plataforma que menciona explícitamente el texto para el SRTM.
+~Copernicus Open Access Hub #Incorrecto: esa plataforma se menciona en el texto para Sentinel-2, no para el SRTM.
+~Google Earth Engine exclusivamente #Incorrecto: el texto menciona a USGS EarthExplorer para el SRTM; Google Earth Engine se menciona en relación con Landsat y con el procesamiento de imágenes.
+~Una plataforma exclusiva de pago #Incorrecto: el texto la presenta como una fuente disponible a través de USGS EarthExplorer, sin indicar que sea de pago.
+}
+
+::T1-S9-04:: Además del SRTM, ¿cuáles de los siguientes son otros modelos de elevación mencionados en el texto? {
+~%33.33333%ALOS PALSAR #Correcto: es uno de los otros modelos de elevación que menciona el texto junto al SRTM.
+~%33.33333%ASTER GDEM #Correcto: es otro de los modelos de elevación mencionados en el texto.
+~%33.33333%TanDEM-X #Correcto: es el tercer modelo de elevación adicional que menciona el texto.
+~%-100%Sentinel-2 #Incorrecto: Sentinel-2 se menciona en el texto dentro de la categoría de imágenes satelitales, no de modelos de elevación.
+}
+
+::T1-S9-05:: ¿Cuál es la resolución espacial de Sentinel-2, en metros, según el texto? {#10:0#Correcto: el texto indica explícitamente que Sentinel-2 tiene 10 m de resolución.}
+
+::T1-S9-06:: ¿Dónde está disponible Sentinel-2, según el texto? {
+=Copernicus Open Access Hub #Correcto: es la plataforma que menciona explícitamente el texto para Sentinel-2.
+~USGS EarthExplorer exclusivamente #Incorrecto: esa plataforma se menciona en el texto para el SRTM y para Landsat, no para Sentinel-2.
+~Google Earth Engine exclusivamente #Incorrecto: el texto menciona específicamente a Copernicus Open Access Hub para Sentinel-2.
+~ASTER GDEM #Incorrecto: ASTER GDEM es en sí mismo otra fuente de datos (un modelo de elevación), no una plataforma de acceso a Sentinel-2.
+}
+
+::T1-S9-07:: ¿Cuál es la resolución espacial de Landsat, en metros, según el texto? {#30:0#Correcto: el texto indica explícitamente que Landsat tiene 30 m de resolución.}
+
+::T1-S9-08:: ¿Dónde están disponibles las imágenes Landsat, según el texto? {
+=USGS EarthExplorer o Google Earth Engine #Correcto: son las dos plataformas que menciona explícitamente el texto para Landsat.
+~Únicamente en Copernicus Open Access Hub #Incorrecto: esa plataforma se menciona en el texto para Sentinel-2, no para Landsat.
+~Únicamente mediante suscripción comercial directa #Incorrecto: el texto no menciona una suscripción comercial exclusiva para acceder a Landsat.
+~ALOS PALSAR #Incorrecto: ALOS PALSAR es en sí mismo otra fuente de datos (un modelo de elevación), no una plataforma de acceso a Landsat.
+}
+
+::T1-S9-09:: ¿Para qué es particularmente útil MODIS, según el texto? {
+=Monitoreo de vegetación y temperatura #Correcto: es el uso particular que menciona explícitamente el texto para MODIS.
+~Delimitación catastral de alta precisión #Incorrecto: la delimitación catastral de alta precisión requiere datos de mucha mayor resolución que MODIS; el texto no lo menciona para este uso.
+~Georreferenciación de mapas históricos #Incorrecto: el texto no relaciona a MODIS con la georreferenciación de cartografía histórica.
+~Cálculo de pirámides y compresión de archivos #Incorrecto: pirámides y compresión son temas técnicos de manejo de archivos (desarrollados en el Texto VIII), no un uso de MODIS.
+}
+
+::T1-S9-10:: ¿Cuál es el rango de resolución espacial de MODIS mencionado en el texto? {
+=250 m a 1 km #Correcto: es el rango exacto que menciona el texto para MODIS.
+~10 m a 30 m #Incorrecto: ese rango corresponde más bien a Sentinel-2 y Landsat, no a MODIS.
+~1 m a 5 m #Incorrecto: el texto no menciona esa resolución tan fina para ninguna de las fuentes citadas.
+~30 m exactos, igual que Landsat #Incorrecto: MODIS tiene una resolución bastante más gruesa que Landsat, entre 250 m y 1 km según el texto.
+}
+
+::T1-S9-11:: ¿Cuáles de los siguientes son ejemplos de cartografía temática mencionados en el texto? {
+~%25%Mapas de cobertura del suelo #Correcto: es uno de los ejemplos de cartografía temática que menciona el texto.
+~%25%Mapas de clima #Correcto: es otro de los ejemplos mencionados en el texto.
+~%25%Índices de sequía #Correcto: también aparece explícitamente como ejemplo de cartografía temática.
+~%25%Peligros naturales #Correcto: es el cuarto ejemplo de cartografía temática que menciona el texto.
+~%-100%SRTM #Incorrecto: el SRTM está listado en el texto dentro de la categoría de modelos de elevación, no de cartografía temática.
+}
+
+::T1-S9-12:: ¿Cuáles de los siguientes son productos derivados mencionados en el texto? {
+~%20%NDVI #Correcto: es uno de los productos derivados que menciona el texto.
+~%20%NDWI #Correcto: es otro de los productos derivados mencionados en el texto.
+~%20%Mapas de pendiente #Correcto: también aparece explícitamente como producto derivado.
+~%20%Orientación del terreno #Correcto: es otro de los productos derivados que menciona el texto.
+~%20%Acumulación de flujo #Correcto: es el quinto producto derivado que menciona el texto.
+~%-100%SRTM #Incorrecto: el SRTM es una fuente primaria de datos de elevación, listada en su propia categoría, no un producto derivado.
+}
+
+::T1-S9-13:: Relacione cada fuente con su resolución espacial aproximada, según el texto. {
+=SRTM -> 30 m
+=Sentinel-2 -> 10 m
+=Landsat -> 30 m
+=MODIS -> 250 m a 1 km
+}
+
+::T1-S9-14:: Además de conseguir rásteres ya elaborados, ¿de qué otras formas se pueden generar rásteres propios, según el texto? {
+=A partir de información vectorial mediante rasterización, o procesando imágenes satelitales con herramientas como QGIS, R, Python o Google Earth Engine #Correcto: son las dos vías adicionales que menciona explícitamente el texto para generar rásteres propios.
+~Únicamente comprando licencias comerciales de datos satelitales #Incorrecto: el texto no restringe la generación de rásteres propios a la compra de licencias comerciales.
+~Únicamente mediante digitalización manual de cartografía en papel #Incorrecto: el texto no menciona la digitalización manual como una de las formas de generar rásteres propios en esta sección.
+~No es posible generar rásteres propios, solo se pueden descargar ya elaborados #Incorrecto: el texto plantea explícitamente lo contrario: sí es posible generar rásteres propios, por rasterización o procesamiento de imágenes.
+}
+
+::T1-S9-15:: {F#Incorrecto: el texto aclara que existen fuentes "tanto gratuitas como comerciales".#Correcto: el texto es explícito en que las fuentes de datos ráster disponibles son tanto gratuitas como comerciales, no exclusivamente gratuitas.} Todas las fuentes de datos ráster mencionadas en el texto son necesariamente gratuitas.
+
+::T1-S9-16:: ¿En qué categoría de fuentes de datos ráster entraría un índice de sequía, según la clasificación del texto? {
+=Cartografía temática #Correcto: es la categoría en la que el texto ubica explícitamente a los índices de sequía.
+~Modelos de elevación #Incorrecto: los modelos de elevación son SRTM, ALOS PALSAR, ASTER GDEM y TanDEM-X, no los índices de sequía.
+~Imágenes satelitales #Incorrecto: las imágenes satelitales son Sentinel-2, Landsat y MODIS; el índice de sequía se ubica en cartografía temática.
+~Productos derivados #Incorrecto: los productos derivados que menciona el texto son NDVI, NDWI, pendiente, orientación y acumulación de flujo, no índices de sequía.
+}
+
+::T1-S9-17:: ¿En qué categoría de fuentes de datos ráster entraría un mapa de pendiente calculado a partir de un MDE, según la clasificación del texto? {
+=Productos derivados #Correcto: es la categoría en la que el texto ubica explícitamente a los mapas de pendiente.
+~Modelos de elevación #Incorrecto: el MDE en sí es un modelo de elevación, pero un mapa de pendiente calculado a partir de él es un producto derivado, según el texto.
+~Imágenes satelitales #Incorrecto: un mapa de pendiente no proviene directamente de un sensor satelital, sino de un cálculo sobre un MDE; por eso se clasifica como producto derivado.
+~Cartografía temática #Incorrecto: la cartografía temática incluye cobertura del suelo, clima, sequía y peligros naturales; el mapa de pendiente se ubica en productos derivados.
+}
+
+::T1-S9-18:: ¿Por qué conviene tener un panorama de las fuentes de datos ráster disponibles, según el texto? {
+=Porque se van a necesitar constantemente durante la cursada y no siempre hace falta generarlos desde cero #Correcto: es la razón exacta que da el texto para cerrar esta sección.
+~Porque a partir de ahora está prohibido generar rásteres propios #Incorrecto: el texto no prohíbe generar rásteres propios; de hecho, explica cómo hacerlo mediante rasterización o procesamiento de imágenes.
+~Porque todas las fuentes gratuitas van a discontinuarse próximamente #Incorrecto: el texto no hace ninguna afirmación sobre discontinuación de fuentes gratuitas.
+~Porque solo se va a trabajar con un único tipo de fuente durante toda la materia #Incorrecto: el texto presenta varias categorías de fuentes distintas, precisamente porque se van a usar distintos tipos a lo largo de la cursada.
+}
