@@ -279,7 +279,7 @@ $CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/3. Tipos de dat
 }
 
 ::T1-S3-14:: ¿Qué habilita, más adelante en la cursada, la generalización del espacio celular, según el texto? {
-=El modelado dinámico y los cubos de datos espacio-temporales de la Unidad III #Correcto: es la conexión explícita que hace el texto con contenidos posteriores de la materia.
+=El modelado dinámico y los cubos de datos espacio-temporales #Correcto: es la conexión explícita que hace el texto con contenidos posteriores de la materia.
 ~La eliminación completa de la necesidad de resolución espacial #Incorrecto: la resolución espacial sigue siendo una propiedad relevante en un espacio celular; no desaparece.
 ~La conversión automática de ráster a vector #Incorrecto: el espacio celular no está vinculado en el texto con la vectorización, sino con el modelado dinámico y los cubos de datos.
 ~El reemplazo del álgebra de mapas por otro tipo de análisis #Incorrecto: el texto no plantea un reemplazo del álgebra de mapas, sino una generalización de la estructura de datos.
