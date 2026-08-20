@@ -19,7 +19,7 @@ $CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/1. ¿Qué son l
 ~Ninguno de los dos modelos representa el espacio de forma completa #Incorrecto: el ráster sí representa el espacio de forma completa y sistemática, esa es justamente su característica distintiva frente al vector.
 }
 
-::T1-S1-03:: {T#Incorrecto: el texto es explícito en que el ráster cubre toda su extensión de forma sistemática y no deja huecos, a diferencia del vector.#Correcto: incluso las celdas sin información relevante quedan cubiertas por la grilla, porque el ráster no distingue "elementos" como el vector.} En un dato ráster existen celdas dentro de su extensión que quedan sin ningún valor asignado, de forma similar a los "huecos" que puede dejar un dato vectorial.
+::T1-S1-03:: {F#Incorrecto: el texto es explícito en que el ráster cubre toda su extensión de forma sistemática y no deja huecos, a diferencia del vector.#Correcto: incluso las celdas sin información relevante quedan cubiertas por la grilla, porque el ráster no distingue "elementos" como el vector.} En un dato ráster existen celdas dentro de su extensión que quedan sin ningún valor asignado, de forma similar a los "huecos" que puede dejar un dato vectorial.
 
 ::T1-S1-04:: ¿Qué tipo de fenómenos representa naturalmente bien el modelo ráster, gracias a su estructura de grilla regular? {
 =Fenómenos que varían de forma continua en el espacio, como la altitud o la temperatura #Correcto: en esos fenómenos no existe un borde real que se pueda dibujar con precisión, así que la grilla regular resulta natural para muestrearlos.
@@ -56,7 +56,7 @@ $CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/1. ¿Qué son l
 ~Porque los geo-objetos varían de forma continua en el espacio #Incorrecto: esa es la característica de un geo-campo, no de un geo-objeto, que se define por tener una frontera precisa.
 }
 
-::T1-S1-09:: {T#Incorrecto: el texto aclara explícitamente que ese límite es una limitación de la medición y no una frontera real del fenómeno.#Correcto: por eso se puede recortar cualquier parte de un geo-campo y el resultado sigue siendo, en esencia, el mismo tipo de dato.} El límite de un geo-campo, como el borde de una escena satelital, representa una frontera real del fenómeno que se está midiendo.
+::T1-S1-09:: {F#Incorrecto: el texto aclara explícitamente que ese límite es una limitación de la medición y no una frontera real del fenómeno.#Correcto: por eso se puede recortar cualquier parte de un geo-campo y el resultado sigue siendo, en esencia, el mismo tipo de dato.} El límite de un geo-campo, como el borde de una escena satelital, representa una frontera real del fenómeno que se está midiendo.
 
 ::T1-S1-10:: Según el texto, ¿cuál de las siguientes opciones es un ejemplo de geo-objeto? {
 =Un lote catastral #Correcto: es una entidad singular definida por su frontera, tal como la describe el texto.
@@ -84,7 +84,7 @@ $CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/1. ¿Qué son l
 ~%-50%Presencia o ausencia de un fenómeno #Incorrecto: eso también es un ejemplo de dato categórico según el texto, no de dato continuo.
 }
 
-::T1-S1-14:: {T#Incorrecto: en un ráster categórico, el número identifica una clase, no mide una magnitud.#Correcto: por eso el texto aclara que, en ese caso, el valor identifica una clase y no mide una cantidad.} El valor de una celda ráster que representa una categoría mide una cantidad física expresada en alguna unidad.
+::T1-S1-14:: {F#Incorrecto: en un ráster categórico, el número identifica una clase, no mide una magnitud.#Correcto: por eso el texto aclara que, en ese caso, el valor identifica una clase y no mide una cantidad.} El valor de una celda ráster que representa una categoría mide una cantidad física expresada en alguna unidad.
 
 ::T1-S1-15:: Según el texto, la correspondencia entre geo-campo/geo-objeto y ráster/vector: {
 =No es casual: es la razón de fondo por la que cada modelo de datos resulta más apto para un tipo de fenómeno #Correcto: el texto presenta esta correspondencia como la base conceptual de por qué cada modelo tiene sus fortalezas y límites.
@@ -116,7 +116,7 @@ $CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/2. Estructura y
 ~Cada celda guarda un único valor numérico #Incorrecto: esta es justamente una de las cuatro características generales que describe el texto.
 }
 
-::T1-S2-03:: {T#Incorrecto: el texto aclara que la posición de una celda nunca es un dato que viaje con la celda misma, a diferencia de lo que ocurre con un vértice vectorial.#Correcto: por eso el texto dice que la posición de una celda es siempre implícita, deducida matemáticamente.} La posición de una celda ráster viaja explícitamente junto con el valor de esa celda, de la misma forma en que un vértice vectorial trae sus propias coordenadas.
+::T1-S2-03:: {F#Incorrecto: el texto aclara que la posición de una celda nunca es un dato que viaje con la celda misma, a diferencia de lo que ocurre con un vértice vectorial.#Correcto: por eso el texto dice que la posición de una celda es siempre implícita, deducida matemáticamente.} La posición de una celda ráster viaja explícitamente junto con el valor de esa celda, de la misma forma en que un vértice vectorial trae sus propias coordenadas.
 
 ::T1-S2-04:: ¿A partir de qué tres datos se calcula la posición de una celda ráster? {
 =El origen del ráster, su resolución, y la cantidad de filas y columnas #Correcto: son exactamente los tres datos que menciona el texto para deducir matemáticamente la posición de cualquier celda.
@@ -136,7 +136,7 @@ $CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/2. Estructura y
 ~Porque solo se aplica a fenómenos categóricos #Incorrecto: esta característica aplica a cualquier ráster, sea de datos continuos o categóricos.
 }
 
-::T1-S2-07:: {F#Incorrecto: el propio texto reconoce que "en la práctica existen rásteres con cierta deformación geométrica", como excepción a la regla general.#Correcto: el texto dice "en general" todas las celdas tienen la misma dimensión, aclarando que existen excepciones con deformación geométrica.} En la práctica existen rásteres cuyas celdas no tienen exactamente el mismo tamaño en toda su extensión, como excepción a la regla general.
+::T1-S2-07:: {T#Incorrecto: el propio texto reconoce que "en la práctica existen rásteres con cierta deformación geométrica", como excepción a la regla general.#Correcto: el texto dice "en general" todas las celdas tienen la misma dimensión, aclarando que existen excepciones con deformación geométrica.} En la práctica existen rásteres cuyas celdas no tienen exactamente el mismo tamaño en toda su extensión, como excepción a la regla general.
 
 ::T1-S2-08:: ¿Qué ventaja aporta que, en general, todas las celdas de un mismo ráster tengan la misma dimensión? {
 =Simplifica enormemente los cálculos posteriores, porque no hay que lidiar con geometrías de tamaños distintos #Correcto: es la ventaja que señala explícitamente el texto sobre la resolución uniforme.
@@ -220,7 +220,7 @@ $CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/3. Tipos de dat
 ~La cantidad de bandas que tiene el ráster #Incorrecto: la cantidad de bandas es una propiedad del archivo completo (mono o multibanda), no del valor de una celda categórica.
 }
 
-::T1-S3-04:: {T#Incorrecto: el texto señala que operar matemáticamente sobre datos categóricos, como sumarlos o promediarlos, "rara vez tiene sentido interpretativo".#Correcto: exactamente, promediar valores de un ráster categórico (como tipo de suelo) carece de sentido interpretativo, porque los códigos de clase no son cantidades.} Tiene sentido interpretativo promediar los valores de un ráster categórico, como uno de tipo de suelo.
+::T1-S3-04:: {F#Incorrecto: el texto señala que operar matemáticamente sobre datos categóricos, como sumarlos o promediarlos, "rara vez tiene sentido interpretativo".#Correcto: exactamente, promediar valores de un ráster categórico (como tipo de suelo) carece de sentido interpretativo, porque los códigos de clase no son cantidades.} Tiene sentido interpretativo promediar los valores de un ráster categórico, como uno de tipo de suelo.
 
 ::T1-S3-05:: ¿Sobre qué tipo de dato ráster sí tiene sentido interpretativo aplicar operaciones matemáticas como sumar o promediar? {
 =Sobre datos continuos #Correcto: el texto contrasta esto directamente con los datos categóricos, donde esas operaciones rara vez tienen sentido.
@@ -736,7 +736,7 @@ $CATEGORY: SIG III/Texto I – Introducción a los Datos Ráster/8. Cuidados pr�
 ~La cantidad de bandas que tiene el archivo #Incorrecto: la cantidad de bandas da alguna pista, pero el texto señala al nombre del archivo como el recurso más importante.
 }
 
-::T1-S8-03:: {T#Incorrecto: el texto usa exactamente ese ejemplo para mostrar que un nombre genérico "no le va a decir absolutamente nada a nadie".#Correcto: el texto usa 'raster1.tif' como ejemplo explícito de nombre que no comunica nada sobre el dato que contiene.} Un archivo llamado "raster1.tif" comunica claramente qué representa el dato que contiene.
+::T1-S8-03:: {F#Incorrecto: el texto usa exactamente ese ejemplo para mostrar que un nombre genérico "no le va a decir absolutamente nada a nadie".#Correcto: el texto usa 'raster1.tif' como ejemplo explícito de nombre que no comunica nada sobre el dato que contiene.} Un archivo llamado "raster1.tif" comunica claramente qué representa el dato que contiene.
 
 ::T1-S8-04:: Según el ejemplo del texto, ¿qué información comunica un nombre de archivo bien construido como "temp_media_ene2024_MODIS_1km.tif"? {
 ~%25%Variable #Correcto: el nombre comunica que la variable es la temperatura media.
