@@ -1,0 +1,63 @@
+---
+title: "Texto II – Rasterización de datos vectoriales"
+author: "Felipe Sodré Mendes Barros; Demian Lorán"
+lang: es
+bibliography: ../../references.bib
+csl: ../../apa.csl
+output-file: "Texto II – Rasterización de datos vectoriales"
+format:
+  docx: default
+  pdf: default
+---
+
+*Cátedra SIG III[^licencia]*
+
+[^licencia]:
+    {{< include ../../_licencia.md >}}
+
+En el texto anterior presentamos la rasterización como uno de los dos sentidos posibles de conversión entre el modelo vectorial y el ráster, y adelantamos que el proceso está lejos de ser una simple cuestión de cambiar de formato de archivo: implica tomar una serie de decisiones técnicas que condicionan tanto la calidad del resultado como los análisis que se puedan hacer después con él. Este texto retoma esa idea y la desarrolla en profundidad, con la mirada puesta en cómo se ejecuta concretamente en QGIS, aunque los mismos parámetros aparecen, con otros nombres, en cualquier software SIG o librería que rasterice datos vectoriales. Vamos a recorrer, una por una, las cuatro decisiones que definen un proceso de rasterización: qué valor le asignamos a cada píxel, qué resolución espacial le damos al ráster resultante, qué extensión va a cubrir, y qué hacemos con las celdas que no coinciden con ninguna geometría. Ninguna de esas decisiones es neutra: cada una tiene consecuencias concretas sobre el análisis posterior, y entenderlas bien de entrada evita errores que después son difíciles de diagnosticar.
+
+## Qué valor le asignamos a cada píxel
+
+El primer parámetro a definir en cualquier rasterización es qué número va a terminar en cada celda que coincida con una geometría vectorial, ya sea que esa geometría sea un punto, una línea o un polígono [@olaya2020]. En el texto anterior distinguimos dos abordajes posibles, la rasterización binaria y la categórica; acá vamos a ver cómo se traduce esa distinción en una decisión técnica concreta al momento de rasterizar.
+
+La opción más simple es asignar un valor fijo, igual para todas las entidades de la capa vectorial sin importar sus atributos: todas las rutas, por ejemplo, terminan representadas por el mismo valor (típicamente 1) en las celdas que ocupan. Esta es la rasterización binaria que ya presentamos, y alcanza cuando lo único que interesa es saber dónde hay algo y dónde no, una máscara de presencia/ausencia que después se pueda combinar con otras capas mediante álgebra de mapas. La otra opción es tomar un campo de la tabla de atributos y trasladar su valor a cada celda: si la columna "numero_ruta" vale 12 para una entidad y 14 para otra, las celdas rasterizadas van a distinguir esos dos valores en vez de tratarlos como una única categoría "ruta". Esta es la rasterización categórica, y hace falta cuando el análisis necesita diferenciar entidades entre sí, no solo detectar su presencia.
+
+Un requisito técnico ineludible en esta segunda opción es que la columna elegida tiene que ser numérica, entera o decimal: QGIS no puede volcar texto libre como valor de celda, porque cada celda de un ráster monobanda guarda un único número, no una cadena de caracteres. Esto quiere decir que, si el atributo relevante viene guardado como texto (un nombre de especie, por ejemplo), hace falta un paso previo de recodificación a un valor numérico antes de poder usarlo en la rasterización. La elección entre valor fijo y campo de atributo depende, otra vez, del análisis que sigue a continuación, el mismo criterio que ya vimos para decidir si conviene rasterizar o vectorizar: si alcanza con una pregunta de tipo sí/no, un valor fijo es suficiente y más simple de manejar después; si el análisis necesita distinguir entidades entre sí, hace falta ir a buscar ese valor a la tabla de atributos.
+
+## Cuántos píxeles va a tener el ráster: la resolución espacial
+
+Definido el valor de cada celda, el siguiente parámetro es cuánto terreno va a representar cada una de ellas, es decir, la resolución espacial del ráster resultante. En QGIS, y en la gran mayoría de las herramientas de rasterización, existen dos formas equivalentes de indicar este parámetro, y conviene entender bien la relación matemática que las conecta antes de elegir cuál usar.
+
+La primera forma es definir directamente la cantidad de píxeles que va a tener el ráster en cada eje: cuántas columnas (ancho) y cuántas filas (alto). El software se encarga después de calcular cuánto terreno representa cada celda a partir de la extensión geográfica que se le indique, un punto sobre el que volvemos en la próxima sección. La segunda forma es definir directamente el tamaño de cada píxel, en las unidades del sistema de referencia del proyecto (lo que QGIS llama "unidades georreferenciadas"): 30 metros, por ejemplo, si el dato está en un sistema de referencia proyectado, o una fracción de grado decimal si todavía está en un sistema geográfico como WGS84. Acá conviene prestar mucha atención al sistema de referencia de la capa que se está rasterizando: pedir "30" como tamaño de píxel en un dato que todavía está en grados decimales no da 30 metros, sino 30 grados, un error de escala que puede arruinar por completo el resultado.
+
+Ambas formas de definir la resolución están atadas, matemáticamente, a un tercer parámetro: la extensión total del ráster. La relación entre los tres es simple:
+
+$$\text{Resolución} = \frac{\text{Extensión total}}{\text{Cantidad de píxeles}}$$
+
+Por eso, si se define la cantidad de píxeles sin haber definido todavía la extensión, todavía no se sabe cuál va a ser la resolución espacial real del resultado: recién se puede calcular una vez que también se conoce cuánto terreno cubre el ráster. Esa dependencia mutua es la razón por la que conviene pensar estos dos parámetros, resolución y extensión, como parte de una misma decisión, y no como dos pasos independientes.
+
+## Qué área cubre el ráster: la extensión
+
+El tercer parámetro, la extensión (o *bounding box*, como suele aparecer en la documentación en inglés), define el área geográfica total que va a cubrir el ráster resultante. En QGIS existen tres formas de definirla: escribiendo manualmente los valores mínimo y máximo de X e Y, tomando la extensión de una capa ya cargada en el proyecto (vectorial o ráster), o directamente usando la extensión actual del lienzo (*canvas*) del proyecto.
+
+Por defecto, la mayoría de las herramientas de rasterización usan la extensión de la propia capa vectorial que se está convirtiendo, lo cual suele ser un buen punto de partida. Pero hay situaciones donde conviene alterarla deliberadamente, y la más frecuente aparece cuando el ráster resultante se va a combinar, más adelante, con otros rásteres ya existentes (en un análisis de álgebra de mapas, por ejemplo). Para que esa combinación sea posible sin errores, todos los rásteres involucrados necesitan compartir exactamente la misma grilla: mismo origen, misma resolución, misma extensión. Si eso no ocurre, hace falta un paso de alineación previo (un problema que vamos a desarrollar con más detalle en un texto posterior), pero definir la extensión con cuidado desde el principio del proceso de rasterización evita tener que resolverlo después.
+
+## Qué hacemos con lo que no es geometría: el valor NoData
+
+El cuarto parámetro es, quizás, el más sutil de los cuatro, porque parece no tener consecuencias visibles y sin embargo puede alterar por completo un análisis posterior. Como ya vimos en el texto anterior, un ráster representa de forma sistemática *toda* su extensión, celda por celda, sin excepción: no existen "huecos" en el sentido en el que sí pueden existir en un dato vectorial. Esto significa que, al rasterizar una geometría que ocupa solo una parte de la extensión definida (una ruta que atraviesa apenas una porción del área de estudio, por ejemplo), el resto de las celdas de esa grilla igual existen: no desaparecen ni quedan "vacías" en un sentido literal, sino que reciben un valor especial que indica ausencia de información, el valor NoData.
+
+Ese valor puede definirse explícitamente, un número que, por convención, el software va a interpretar como "sin datos" y va a excluir de la visualización y del análisis (típicamente algo como -9999), o puede quedar sin definir, en cuyo caso el software le asigna un valor por defecto a esas celdas (frecuentemente 0) sin marcarlas como tales. La diferencia entre ambas opciones parece menor, pero no lo es en absoluto.
+
+El primer riesgo aparece cuando el valor elegido para representar NoData coincide con un valor real y válido dentro del fenómeno que se está representando. Si se rasteriza, por ejemplo, un modelo de elevación y se define 0 como valor de NoData, cualquier celda cuya altitud real sea 0 metros (una zona costera, por ejemplo) va a quedar enmascarada como si no tuviera información, cuando en realidad sí la tiene: un dato válido termina invisibilizado, tanto en la visualización como en cualquier cálculo posterior. El segundo riesgo, más importante todavía porque no depende de esta coincidencia numérica, aparece apenas se empieza a operar con el ráster mediante álgebra de mapas, el tema de nuestro próximo texto: cualquier operación matemática entre una celda con valor real y una celda NoData da como resultado, también, NoData. Ese comportamiento se propaga: alcanza con que una sola de las capas de entrada tenga una celda mal configurada como NoData para que toda una cadena de cálculos posteriores quede contaminada en ese mismo punto, muchas veces sin que el error se note a simple vista en el resultado final.
+
+Por eso, aunque a primera vista el valor NoData pueda parecer un detalle estético o meramente visual, en realidad es uno de los parámetros técnicos que exige más atención consciente al rasterizar, precisamente porque sus errores tienden a ser silenciosos.
+
+## Ninguna de estas cuatro decisiones es neutra
+
+Rasterizar un dato vectorial, entonces, está lejos de ser una simple conversión automática de formato. Cada uno de los cuatro parámetros que recorrimos (el valor de cada píxel, la resolución espacial, la extensión, y el tratamiento del valor NoData) representa una decisión técnica que hay que tomar de manera consciente, y que termina condicionando tanto la calidad del ráster resultante como los análisis que se puedan hacer con él más adelante en la cursada, sea álgebra de mapas, análisis multicriterio o alineación con otros rásteres. La buena noticia es que, entendiendo bien estas cuatro decisiones y por qué ninguna es neutra, gran parte del trabajo de rasterización deja de ser un conjunto de pasos mecánicos en un cuadro de diálogo de QGIS, y se convierte en lo que realmente es: una serie de decisiones analíticas, tomadas en función del objetivo del estudio y no al revés.
+
+## Referencias
+
+::: {#refs}
+:::

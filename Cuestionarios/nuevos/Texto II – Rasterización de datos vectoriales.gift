@@ -1,0 +1,369 @@
+// Cuestionario autoevaluativo — Texto II – Rasterización de datos vectoriales
+// SIG III — Tecnicatura Universitaria en Sistemas de Información Geográfica y Teledetección
+// Formato GIFT (importable a Moodle). Ver criterios de diseño en CLAUDE.md ("Actividades autoevaluativas"):
+// preguntas autocorregibles, devolución por alternativa, ceñidas al contenido del texto correspondiente.
+// En las preguntas Verdadero/Falso, el marcador {T#..#..}/{F#..#..} define la respuesta que Moodle
+// califica como correcta (T=Verdadero, F=Falso); el orden del feedback es siempre incorrecto-primero,
+// correcto-segundo, según el parser oficial de Moodle (question/format/gift/format.php).
+
+$CATEGORY: SIG III/Texto II – Rasterización de datos vectoriales/1. Qué valor le asignamos a cada píxel
+
+::T2-S1-01:: ¿Cuáles de las siguientes son, según el texto, las cuatro decisiones que definen un proceso de rasterización? {
+~%25%Qué valor le asignamos a cada píxel #Correcto: es la primera de las cuatro decisiones que desarrolla el texto.
+~%25%Qué resolución espacial le damos al ráster resultante #Correcto: es la segunda decisión que desarrolla el texto.
+~%25%Qué extensión va a cubrir el ráster #Correcto: es la tercera decisión que desarrolla el texto.
+~%25%Qué hacemos con las celdas que no coinciden con ninguna geometría (NoData) #Correcto: es la cuarta decisión que desarrolla el texto.
+~%-100%Qué sistema de referencia usar #Incorrecto: el sistema de referencia se menciona como una advertencia dentro de la decisión de resolución, pero no es, en sí misma, una de las cuatro decisiones que enumera el texto.
+}
+
+::T2-S1-02:: ¿Qué caracteriza a la rasterización binaria, según el texto? {
+=Asigna un valor fijo, igual para todas las entidades de la capa vectorial sin importar sus atributos #Correcto: es la definición exacta que da el texto sobre este abordaje, típicamente con el valor 1.
+~Traslada un campo de la tabla de atributos como valor de celda #Incorrecto: eso describe a la rasterización categórica, no a la binaria.
+~Requiere que la capa vectorial tenga al menos dos atributos numéricos #Incorrecto: el texto no exige esa cantidad de atributos para la rasterización binaria; de hecho, no depende de ningún atributo.
+~Solo puede aplicarse sobre geometrías de tipo punto #Incorrecto: el texto no restringe la rasterización binaria a un tipo de geometría en particular.
+}
+
+::T2-S1-03:: ¿Qué caracteriza a la rasterización categórica, según el texto? {
+=Toma un campo de la tabla de atributos y lo traslada como valor de celda, distinguiendo entidades entre sí #Correcto: es la definición exacta que da el texto sobre este abordaje.
+~Asigna el mismo valor fijo a todas las entidades, sin diferenciarlas #Incorrecto: eso describe a la rasterización binaria, no a la categórica.
+~Excluye automáticamente las celdas con valores repetidos #Incorrecto: el texto no menciona esa exclusión como parte de la rasterización categórica.
+~Solo puede usarse si la capa vectorial no tiene tabla de atributos #Incorrecto: es al revés: la rasterización categórica depende justamente de tener un campo disponible en la tabla de atributos.
+}
+
+::T2-S1-04:: Según el texto, ¿qué tipo de dato debe tener la columna de la tabla de atributos que se usa para una rasterización categórica? {
+=Numérica, entera o decimal #Correcto: es el requisito técnico que exige explícitamente el texto.
+~Texto libre #Incorrecto: el texto aclara que QGIS no puede volcar texto libre como valor de celda.
+~Booleana (verdadero/falso) #Incorrecto: el texto no menciona este tipo de dato como el requerido; pide específicamente un valor numérico.
+~Fecha #Incorrecto: una columna de tipo fecha no es el tipo numérico que exige el texto para trasladarse como valor de celda.
+}
+
+::T2-S1-05:: ¿Por qué, según el texto, QGIS no puede volcar texto libre como valor de una celda? {
+=Porque cada celda de un ráster monobanda guarda un único número, no una cadena de caracteres #Correcto: es la explicación exacta que da el texto.
+~Porque el texto libre ocupa demasiado espacio de almacenamiento #Incorrecto: el motivo que da el texto no es de espacio de almacenamiento, sino del tipo de dato que admite una celda.
+~Porque QGIS solo admite capas vectoriales con atributos numéricos #Incorrecto: QGIS sí admite capas vectoriales con atributos de texto; el límite está en qué puede guardar una celda ráster.
+~Porque el texto libre no se puede visualizar en un mapa #Incorrecto: el problema no es de visualización, sino de qué tipo de valor admite una celda.
+}
+
+::T2-S1-06:: {F#Incorrecto: el texto es explícito en que hace falta un paso previo de recodificación a un valor numérico antes de poder usar ese atributo en la rasterización.#Correcto: efectivamente, según el texto, hace falta recodificar el atributo de texto a un valor numérico antes de poder usarlo como valor de celda.} Si el atributo relevante para rasterizar viene guardado como texto, se puede usar directamente sin ningún paso previo.
+
+::T2-S1-07:: ¿De qué depende, según el texto, la elección entre asignar un valor fijo o un campo de atributo al rasterizar? {
+=Del análisis que sigue a continuación #Correcto: es el mismo criterio que el texto ya había usado para decidir si conviene rasterizar o vectorizar.
+~Del tamaño de la capa vectorial de origen #Incorrecto: el texto no vincula esta elección al tamaño de la capa.
+~De si la capa vectorial es de tipo punto, línea o polígono #Incorrecto: el texto no condiciona esta elección al tipo de geometría, sino al análisis que sigue.
+~De la resolución espacial que se vaya a usar #Incorrecto: la resolución es una decisión distinta, no el criterio que da el texto para elegir el valor de píxel.
+}
+
+::T2-S1-08:: Relacione cada abordaje de rasterización con su característica, según el texto. {
+=Rasterización binaria -> Asigna un valor fijo, igual para todas las entidades
+=Rasterización categórica -> Traslada un campo de la tabla de atributos como valor de celda
+}
+
+::T2-S1-09:: Si se necesita distinguir entre distintas rutas de una capa vectorial (no solo saber dónde hay rutas), según el criterio del texto, ¿qué abordaje conviene usar? {
+=Rasterización categórica, usando el campo correspondiente (por ejemplo, "numero_ruta") #Correcto: es justamente el caso en el que hace falta diferenciar entidades entre sí.
+~Rasterización binaria, con valor fijo 1 #Incorrecto: la binaria alcanza para saber dónde hay rutas, pero no distingue una ruta de otra.
+~Ninguno de los dos abordajes permite esa distinción #Incorrecto: la rasterización categórica sí permite esa distinción, según el texto.
+~Hace falta vectorizar antes de rasterizar #Incorrecto: no hace falta ese paso adicional; alcanza con elegir el abordaje categórico.
+}
+
+::T2-S1-10:: En el ejemplo del texto sobre una máscara con valor 1 en todas las celdas ocupadas por una ruta, ¿qué abordaje de rasterización se está usando? {
+=Rasterización binaria #Correcto: es el ejemplo explícito que da el texto de este abordaje.
+~Rasterización categórica #Incorrecto: la categórica trasladaría un campo distinto por cada ruta, no el mismo valor fijo para todas.
+~Vectorización #Incorrecto: vectorizar es el proceso inverso (de ráster a vector), no lo que describe este ejemplo.
+~Interconversión múltiple #Incorrecto: ese término no aparece en el texto.
+}
+
+::T2-S1-11:: {F#Incorrecto: el texto dice explícitamente que el proceso está lejos de ser una simple cuestión de cambiar de formato de archivo.#Correcto: en efecto, el texto aclara que rasterizar implica una serie de decisiones técnicas, no un simple cambio de formato.} El proceso de rasterización es, según el texto, una simple cuestión de cambiar de formato de archivo.
+
+::T2-S1-12:: ¿Cuántas decisiones técnicas define, en total, un proceso de rasterización según el texto? {
+=Cuatro #Correcto: son las cuatro decisiones que el texto recorre una por una.
+~Dos #Incorrecto: el texto desarrolla cuatro decisiones, no dos.
+~Tres #Incorrecto: el texto desarrolla cuatro decisiones, no tres.
+~Seis #Incorrecto: el texto desarrolla exactamente cuatro decisiones, no seis.
+}
+
+::T2-S1-13:: ¿Cuál de las siguientes opciones NO forma parte de las cuatro decisiones de rasterización que desarrolla el texto? {
+=El sistema de referencia de la capa vectorial #Correcto: es la opción falsa; el sistema de referencia se menciona como una advertencia dentro de la decisión de resolución, pero no es, en sí misma, una de las cuatro decisiones.
+~Qué valor le asignamos a cada píxel #Incorrecto: esta sí es una de las cuatro decisiones que desarrolla el texto.
+~Qué extensión va a cubrir el ráster #Incorrecto: esta también es una de las cuatro decisiones que desarrolla el texto.
+~Qué hacemos con las celdas sin geometría (NoData) #Incorrecto: esta es la cuarta decisión que desarrolla el texto.
+}
+
+::T2-S1-14:: El texto dice que la elección entre valor fijo y campo de atributo sigue "el mismo criterio" que otra decisión ya presentada en el texto anterior. ¿Cuál es esa otra decisión? {
+=Si conviene rasterizar o vectorizar #Correcto: el texto dice explícitamente que es el mismo criterio usado para esa decisión, presentada en el texto anterior.
+~Si conviene usar 8 o 16 bits de resolución radiométrica #Incorrecto: esa distinción no es la que menciona el texto en esta comparación.
+~Si conviene usar un ráster monobanda o multibanda #Incorrecto: esa distinción tampoco es la que menciona el texto en esta comparación.
+~Si conviene aplicar álgebra de mapas o análisis multicriterio #Incorrecto: esa no es la comparación que hace el texto en este punto.
+}
+
+$CATEGORY: SIG III/Texto II – Rasterización de datos vectoriales/2. Cuántos píxeles va a tener el ráster: la resolución espacial
+
+::T2-S2-01:: ¿Cuáles son las dos formas equivalentes de definir la resolución espacial en QGIS, según el texto? {
+~%50%Por cantidad de píxeles (columnas y filas) #Correcto: es la primera forma que describe el texto.
+~%50%Por tamaño de píxel, en unidades georreferenciadas #Correcto: es la segunda forma que describe el texto.
+~%-100%Por resolución radiométrica #Incorrecto: la resolución radiométrica es una propiedad distinta, vista en Texto I, no una forma de definir la resolución espacial al rasterizar.
+~%-100%Por cantidad de bandas del ráster resultante #Incorrecto: la cantidad de bandas no es una forma de definir la resolución espacial.
+}
+
+::T2-S2-02:: Si se define la resolución por cantidad de píxeles, ¿qué calcula después el software, según el texto? {
+=Cuánto terreno representa cada celda, a partir de la extensión geográfica indicada #Correcto: es el cálculo exacto que describe el texto.
+~La cantidad de bandas necesarias #Incorrecto: la cantidad de bandas no depende de este cálculo.
+~El sistema de referencia más adecuado #Incorrecto: el sistema de referencia no se calcula automáticamente a partir de la cantidad de píxeles.
+~El valor NoData óptimo #Incorrecto: el valor NoData es una decisión aparte, no algo que se calcule a partir de la cantidad de píxeles.
+}
+
+::T2-S2-03:: ¿Cómo llama el texto a la unidad que usa QGIS para definir el tamaño de píxel cuando se elige la segunda forma? {
+="Unidades georreferenciadas" #Correcto: es el término exacto que usa el texto.
+~"Píxeles cuadrados" #Incorrecto: ese término no aparece en el texto.
+~"Resolución nominal absoluta" #Incorrecto: ese término no aparece en el texto.
+~"Grados universales" #Incorrecto: ese término no aparece en el texto.
+}
+
+::T2-S2-04:: Según el texto, ¿qué error se comete si se pide "30" como tamaño de píxel en un dato que todavía está en un sistema geográfico como WGS84? {
+=Se obtienen píxeles de 30 grados, no de 30 metros, un error de escala que puede arruinar el resultado #Correcto: es la advertencia exacta que hace el texto sobre este error.
+~QGIS rechaza automáticamente la operación y no genera ningún ráster #Incorrecto: el texto no dice que la operación se rechace, sino que se ejecuta con un error de escala.
+~El ráster resultante queda automáticamente reproyectado a un sistema en metros #Incorrecto: no hay reproyección automática; el error es de escala, no de sistema de referencia.
+~No hay ninguna diferencia, porque QGIS interpreta el valor según el dato de origen #Incorrecto: el texto advierte justamente que sí hay una diferencia, y que puede arruinar el resultado.
+}
+
+::T2-S2-05:: {F#Incorrecto: el texto advierte que, en ese caso, el valor se interpreta en grados decimales, no en metros.#Correcto: en efecto, pedir "30" en un dato en grados decimales da 30 grados, no 30 metros.} Pedir un tamaño de píxel de 30 en un dato en WGS84 (grados decimales) da como resultado píxeles de 30 metros.
+
+::T2-S2-06:: Complete la fórmula que da el texto: Resolución = Extensión total / ____. {
+=Cantidad de píxeles #Correcto: es la fórmula exacta que da el texto para relacionar resolución, extensión y cantidad de píxeles.
+=cantidad de píxeles #Correcto: es la fórmula exacta que da el texto para relacionar resolución, extensión y cantidad de píxeles.
+}
+
+::T2-S2-07:: Si se define la cantidad de píxeles de un ráster sin haber definido todavía su extensión, ¿qué ocurre, según el texto? {
+=Todavía no se sabe cuál va a ser la resolución espacial real del resultado #Correcto: es la consecuencia exacta que señala el texto.
+~El software asigna automáticamente una resolución de 30 metros por defecto #Incorrecto: el texto no menciona un valor por defecto de 30 metros.
+~La resolución queda definida igual, sin depender de la extensión #Incorrecto: el texto es explícito en que la resolución depende de la extensión.
+~QGIS solicita automáticamente la extensión antes de continuar #Incorrecto: el texto no describe ese comportamiento automático del software.
+}
+
+::T2-S2-08:: {F#Incorrecto: el texto dice que ambos parámetros están atados matemáticamente, con una dependencia mutua.#Correcto: efectivamente, según el texto, ambos parámetros están atados matemáticamente y no son independientes.} Resolución espacial y extensión son, según el texto, dos parámetros completamente independientes entre sí.
+
+::T2-S2-09:: ¿Por qué conviene pensar la resolución y la extensión como parte de una misma decisión, según el texto? {
+=Porque están atadas matemáticamente: una no se puede calcular sin conocer la otra #Correcto: es la razón exacta que da el texto.
+~Porque QGIS las agrupa siempre en el mismo cuadro de diálogo #Incorrecto: el texto no da esa razón; la razón es matemática, no de interfaz de usuario.
+~Porque ambas dependen exclusivamente del valor NoData elegido #Incorrecto: el valor NoData es una decisión distinta, no relacionada con esta dependencia.
+~Porque ambas determinan el tipo de dato (categórico o continuo) del ráster #Incorrecto: el tipo de dato no depende de la resolución ni de la extensión, según el texto.
+}
+
+::T2-S2-10:: En un sistema de referencia proyectado, ¿en qué unidad se suele expresar el tamaño de píxel, según el ejemplo del texto? {
+=Metros #Correcto: es la unidad del ejemplo que da el texto para un sistema proyectado.
+~Grados decimales #Incorrecto: los grados decimales corresponden al caso de un sistema de referencia geográfico, no proyectado.
+~Píxeles por pulgada #Incorrecto: esa unidad no aparece en el texto para este contexto.
+~Hectáreas #Incorrecto: las hectáreas son una unidad de superficie, no de tamaño de píxel.
+}
+
+::T2-S2-11:: Relacione cada forma de definir la resolución espacial con lo que hay que especificar, según el texto. {
+=Por cantidad de píxeles -> Columnas y filas
+=Por tamaño de píxel (unidades georreferenciadas) -> Tamaño nominal de la celda, por ejemplo 30 m
+}
+
+::T2-S2-12:: ¿Qué parámetro adicional hace falta conocer para poder calcular la resolución espacial real cuando se define la cantidad de píxeles, según el texto? {
+=La extensión geográfica del ráster resultante #Correcto: es el parámetro que falta, según la fórmula que da el texto.
+~El valor NoData #Incorrecto: el valor NoData no interviene en este cálculo.
+~La cantidad de bandas del ráster #Incorrecto: la cantidad de bandas no interviene en el cálculo de la resolución espacial.
+~El campo elegido de la tabla de atributos #Incorrecto: ese campo interviene en la decisión de valor de píxel, no en el cálculo de resolución.
+}
+
+$CATEGORY: SIG III/Texto II – Rasterización de datos vectoriales/3. Qué área cubre el ráster: la extensión
+
+::T2-S3-01:: ¿Cómo se llama, en la documentación en inglés, el parámetro de extensión de un ráster, según el texto? {
+=bounding box #Correcto: es el término en inglés que menciona explícitamente el texto.
+=Bounding box #Correcto: es el término en inglés que menciona explícitamente el texto.
+}
+
+::T2-S3-02:: ¿Cuáles son las tres formas de definir la extensión en QGIS, según el texto? {
+~%33.33333%Escribiendo manualmente los valores mínimo y máximo de X e Y #Correcto: es la primera forma que menciona el texto.
+~%33.33333%Tomando la extensión de una capa ya cargada en el proyecto #Correcto: es la segunda forma que menciona el texto.
+~%33.33333%Usando la extensión actual del lienzo (canvas) del proyecto #Correcto: es la tercera forma que menciona el texto.
+~%-100%Calculando automáticamente el centro geográfico del país #Incorrecto: esa opción no aparece en el texto.
+~%-100%Copiando la extensión de un ráster descargado de Google Earth Engine #Incorrecto: el texto no menciona esta forma como una de las tres opciones de QGIS.
+}
+
+::T2-S3-03:: Por defecto, ¿qué extensión usan la mayoría de las herramientas de rasterización, según el texto? {
+=La extensión de la propia capa vectorial que se está convirtiendo #Correcto: es lo que señala explícitamente el texto.
+~La extensión de todo el proyecto QGIS #Incorrecto: el texto señala específicamente a la capa vectorial de origen, no a todo el proyecto.
+~La extensión del sistema de referencia utilizado #Incorrecto: un sistema de referencia no tiene, en sí mismo, una extensión que se use por defecto de esta manera.
+~Una extensión fija de 30 x 30 km #Incorrecto: el texto no menciona ningún valor fijo de extensión por defecto.
+}
+
+::T2-S3-04:: ¿Cuándo conviene alterar deliberadamente la extensión por defecto, según el texto? {
+=Cuando el ráster resultante se va a combinar, más adelante, con otros rásteres ya existentes #Correcto: es el caso más frecuente que menciona el texto.
+~Cuando la capa vectorial de origen tiene más de mil entidades #Incorrecto: la cantidad de entidades no es el criterio que da el texto.
+~Cuando se va a exportar el resultado a formato PDF #Incorrecto: el formato de exportación no tiene relación con este criterio.
+~Cuando el valor NoData elegido coincide con un valor real #Incorrecto: eso es un problema distinto, relacionado con la decisión de NoData, no con la extensión.
+}
+
+::T2-S3-05:: Para poder combinar varios rásteres sin errores (por ejemplo, en álgebra de mapas), ¿qué necesitan compartir exactamente, según el texto? {
+~%33.33333%El mismo origen #Correcto: es uno de los tres elementos que deben compartir, según el texto.
+~%33.33333%La misma resolución #Correcto: es otro de los tres elementos que deben compartir, según el texto.
+~%33.33333%La misma extensión #Correcto: es el tercer elemento que deben compartir, según el texto.
+~%-100%La misma cantidad de bandas #Incorrecto: el texto no incluye la cantidad de bandas entre lo que hace falta compartir.
+~%-100%El mismo valor NoData #Incorrecto: el texto no incluye el valor NoData entre lo que hace falta compartir para combinar rásteres.
+}
+
+::T2-S3-06:: {F#Incorrecto: el texto aclara que, si eso no ocurre, hace falta un paso de alineación previo.#Correcto: efectivamente, según el texto, hace falta un paso de alineación previo si los rásteres no comparten la misma grilla.} Si dos rásteres no comparten exactamente la misma grilla, se pueden combinar igual sin ningún paso adicional.
+
+::T2-S3-07:: ¿Cómo se llama el proceso que hace falta cuando dos rásteres no comparten la misma grilla, según el texto? {
+=Alineación #Correcto: es el término que usa el texto, anunciando que se va a desarrollar en un texto posterior.
+~Reclasificación #Incorrecto: reclasificar es cambiar valores dentro de un mismo ráster, no un proceso de ajuste de grilla entre rásteres.
+~Vectorización #Incorrecto: vectorizar es convertir un ráster en vector, no un proceso de ajuste de grilla.
+~Compresión #Incorrecto: la compresión es un tema técnico distinto, sin relación con este problema.
+}
+
+::T2-S3-08:: Relacione cada forma de definir la extensión con su descripción, según el texto. {
+=Manual -> Valores mínimo y máximo de X e Y
+=Capa existente -> Extensión de una capa ya cargada en el proyecto
+=Canvas -> Extensión actual del lienzo del proyecto
+}
+
+::T2-S3-09:: ¿Qué le puede pasar a un análisis posterior si se define una extensión que después no coincide con la que se necesita para combinar con otro ráster, según el texto? {
+=Hay que resolver un problema de alineación que se podría haber evitado definiendo bien la extensión desde el principio #Correcto: es la consecuencia que señala el texto.
+~El ráster pierde automáticamente su sistema de referencia #Incorrecto: el texto no menciona esta consecuencia.
+~No hay ninguna consecuencia práctica #Incorrecto: el texto plantea justamente lo contrario, señalando el costo de tener que alinear después.
+~El valor NoData cambia automáticamente #Incorrecto: el texto no vincula esta situación con un cambio automático del valor NoData.
+}
+
+::T2-S3-10:: {F#Incorrecto: el texto es explícito en que la extensión es clave para poder combinar rásteres después, sobre todo en álgebra de mapas.#Correcto: efectivamente, según el texto, la extensión sí tiene relación directa con la posibilidad de combinar rásteres.} La extensión de un ráster no tiene relación con la posibilidad de combinarlo después con otras capas ráster.
+
+::T2-S3-11:: ¿Qué información define, en conjunto, la extensión (o bounding box) de un ráster, según el texto? {
+=El área geográfica total que va a cubrir el ráster resultante #Correcto: es la definición exacta que da el texto.
+~La cantidad de bandas que va a tener el ráster #Incorrecto: eso no es lo que define la extensión.
+~El sistema de referencia que va a usar el ráster #Incorrecto: el sistema de referencia es un parámetro distinto de la extensión.
+~El valor que se le va a asignar a cada píxel #Incorrecto: ese es el primer parámetro que desarrolla el texto, no la extensión.
+}
+
+::T2-S3-12:: {T#Incorrecto: el texto usa "bounding box" explícitamente como la forma en la que ese mismo parámetro aparece en la documentación en inglés.#Correcto: efectivamente, el texto presenta "bounding box" como el nombre que recibe la extensión en la documentación en inglés.} Extensión y bounding box son, según el texto, dos formas de llamar al mismo parámetro.
+
+$CATEGORY: SIG III/Texto II – Rasterización de datos vectoriales/4. Qué hacemos con lo que no es geometría: el valor NoData
+
+::T2-S4-01:: Según el texto, ¿qué ocurre con las celdas de la grilla que no coinciden con ninguna geometría al rasterizar? {
+=Reciben un valor especial que indica ausencia de información (NoData), pero siguen existiendo como parte de la matriz completa #Correcto: es la explicación exacta que da el texto.
+~Desaparecen de la grilla, reduciendo la cantidad total de celdas del ráster #Incorrecto: el texto aclara que esas celdas no desaparecen; solo reciben un valor especial.
+~Quedan con el mismo valor que la celda vecina más cercana #Incorrecto: el texto no describe ese comportamiento; describe la asignación de un valor especial de NoData.
+~Se eliminan automáticamente al exportar el archivo #Incorrecto: el texto no menciona ninguna eliminación al exportar.
+}
+
+::T2-S4-02:: {F#Incorrecto: el texto explica que esas celdas siguen existiendo, solo que con el valor especial NoData.#Correcto: efectivamente, esas celdas no desaparecen; siguen existiendo con valor NoData.} Las celdas que no coinciden con ninguna geometría rasterizada desaparecen de la grilla ráster resultante.
+
+::T2-S4-03:: ¿Cuáles son las dos opciones para el valor NoData que menciona el texto? {
+~%50%Definirlo explícitamente con un número convencional (por ejemplo, -9999) #Correcto: es la primera opción que describe el texto.
+~%50%Dejarlo sin definir, con el software asignando un valor por defecto sin marcarlo como NoData #Correcto: es la segunda opción que describe el texto.
+~%-100%Eliminar automáticamente esas celdas del archivo #Incorrecto: el texto no menciona esta opción; las celdas siguen existiendo en cualquiera de los dos casos.
+~%-100%Rellenarlas siempre con el promedio de las celdas vecinas #Incorrecto: el texto no describe esta técnica como una de las dos opciones para el valor NoData.
+}
+
+::T2-S4-04:: ¿Cuál es el primer riesgo que señala el texto sobre el valor NoData? {
+=Que coincida con un valor real y válido del fenómeno representado, enmascarando datos verdaderos #Correcto: es el primer riesgo que desarrolla el texto.
+~Que aumente el tamaño del archivo de forma excesiva #Incorrecto: el texto no plantea este riesgo en relación con el valor NoData.
+~Que impida abrir el ráster en QGIS #Incorrecto: el texto no menciona ese problema de apertura del archivo.
+~Que cambie automáticamente la resolución espacial del ráster #Incorrecto: el valor NoData no tiene relación con la resolución espacial, según el texto.
+}
+
+::T2-S4-05:: Según el ejemplo del texto sobre un modelo de elevación, ¿qué pasa si se define 0 como valor de NoData y existen celdas con altitud real de 0 metros (una zona costera, por ejemplo)? {
+=Esas celdas quedan enmascaradas como si no tuvieran información, cuando en realidad sí la tienen #Correcto: es la consecuencia exacta que describe el texto.
+~El ráster deja de poder abrirse en cualquier software #Incorrecto: el texto no plantea esa consecuencia.
+~El valor de esas celdas se corrige automáticamente a 1 metro #Incorrecto: el texto no describe ninguna corrección automática de ese tipo.
+~No hay ninguna consecuencia, porque 0 es un valor neutro #Incorrecto: el texto señala explícitamente que sí hay una consecuencia: un dato válido termina invisibilizado.
+}
+
+::T2-S4-06:: ¿Cuál es el segundo riesgo, más importante todavía según el texto porque no depende de una coincidencia numérica? {
+=Que en álgebra de mapas, cualquier operación entre un valor real y una celda NoData da como resultado NoData #Correcto: es el segundo riesgo que desarrolla el texto.
+~Que el archivo pese más de lo esperado #Incorrecto: el peso del archivo no es el riesgo que señala el texto en este punto.
+~Que se pierda automáticamente el sistema de referencia del ráster #Incorrecto: el texto no vincula el valor NoData con la pérdida del sistema de referencia.
+~Que las bandas del ráster queden desalineadas entre sí #Incorrecto: el texto no describe ese riesgo en relación con NoData.
+}
+
+::T2-S4-07:: {F#Incorrecto: el texto es explícito en que esa operación da como resultado NoData, no un valor real aproximado.#Correcto: efectivamente, según el texto, esa operación produce NoData, no un valor real.} En álgebra de mapas, una operación entre un valor real y una celda NoData produce, según el texto, un valor real aproximado.
+
+::T2-S4-08:: ¿Cómo describe el texto la forma en que se propaga un error de NoData mal configurado en una cadena de cálculos? {
+=Alcanza con que una sola capa de entrada tenga una celda mal configurada como NoData para que toda una cadena de cálculos posteriores quede contaminada en ese mismo punto #Correcto: es la descripción exacta que da el texto.
+~El error se corrige automáticamente en la primera operación de álgebra de mapas #Incorrecto: el texto no describe ninguna corrección automática.
+~El error solo afecta a la celda original, sin propagarse a ningún cálculo posterior #Incorrecto: el texto describe justamente lo contrario, una propagación hacia adelante.
+~El error se detecta siempre de forma inmediata por el software #Incorrecto: el texto dice que estos errores tienden a ser silenciosos, no detectados de forma inmediata.
+}
+
+::T2-S4-09:: {F#Incorrecto: el texto dice explícitamente que estos errores tienden a ser silenciosos.#Correcto: efectivamente, el texto señala que estos errores tienden a ser silenciosos, no fáciles de notar a simple vista.} Los errores de configuración del valor NoData suelen notarse fácilmente a simple vista en el resultado final, según el texto.
+
+::T2-S4-10:: ¿Por qué el texto insiste en que el valor NoData no es un detalle meramente estético o visual? {
+=Porque es uno de los parámetros técnicos que exige más atención consciente, ya que sus errores tienden a ser silenciosos #Correcto: es la conclusión exacta con la que el texto cierra este apartado.
+~Porque determina directamente el color con el que se visualiza el ráster #Incorrecto: el texto no vincula el valor NoData con la elección de color de visualización.
+~Porque cambia el nombre del archivo automáticamente #Incorrecto: el texto no relaciona el valor NoData con el nombre del archivo.
+~Porque es el único parámetro que se puede modificar después de rasterizar #Incorrecto: el texto no hace esa afirmación sobre los otros parámetros.
+}
+
+::T2-S4-11:: ¿Qué característica del modelo ráster, ya vista en el texto anterior, explica por qué las celdas fuera de una geometría rasterizada no quedan simplemente "vacías"? {
+=Que el ráster representa de forma sistemática toda su extensión, sin huecos #Correcto: es la característica que el texto retoma explícitamente para explicar este punto.
+~Que el ráster no tiene tabla de atributos #Incorrecto: esa característica no es la que explica este comportamiento particular de NoData.
+~Que el ráster puede ser mono o multibanda #Incorrecto: esa distinción no tiene relación con este comportamiento.
+~Que la posición de cada celda es implícita #Incorrecto: si bien es una característica real del ráster, no es la que el texto usa para explicar por qué las celdas fuera de la geometría no quedan vacías.
+}
+
+::T2-S4-12:: ¿Cómo se llama el valor especial que indica ausencia de información en una celda ráster, según el texto? {
+=NoData #Correcto: es el término exacto que usa el texto.
+=nodata #Correcto: es el término exacto que usa el texto.
+}
+
+::T2-S4-13:: En el ejemplo del texto sobre valores convencionales de NoData, ¿qué número típico se menciona? {
+=-9999 #Correcto: es el ejemplo explícito de valor convencional de NoData que da el texto.
+~0 #Incorrecto: 0 aparece en el texto como el valor por defecto que a veces se asigna sin marcarlo como NoData, no como el ejemplo típico de valor explícito de NoData.
+~255 #Incorrecto: ese valor no aparece en el texto en relación con NoData.
+~1 #Incorrecto: ese valor no aparece en el texto como ejemplo de valor de NoData.
+}
+
+::T2-S4-14:: Relacione cada riesgo del valor NoData con su descripción, según el texto. {
+=Coincidencia con un valor real -> Enmascara datos válidos, como una altitud real de 0 metros
+=Propagación en álgebra de mapas -> Cualquier operación con una celda NoData da como resultado NoData
+}
+
+$CATEGORY: SIG III/Texto II – Rasterización de datos vectoriales/5. Ninguna de estas cuatro decisiones es neutra
+
+::T2-S5-01:: Según la síntesis final del texto, ¿qué es rasterizar un dato vectorial? {
+=Una serie de decisiones técnicas conscientes, no una simple conversión automática de formato #Correcto: es la conclusión exacta con la que cierra el texto.
+~Un paso mecánico que no requiere ninguna decisión por parte de quien lo ejecuta #Incorrecto: el texto sostiene justamente lo contrario en su cierre.
+~Un proceso que depende únicamente del software que se utilice #Incorrecto: el texto no atribuye el resultado únicamente al software, sino a las decisiones tomadas.
+~Una operación que solo importa para la visualización, no para el análisis #Incorrecto: el texto conecta estas decisiones directamente con la calidad del análisis posterior, no solo con la visualización.
+}
+
+::T2-S5-02:: ¿Cuáles son los cuatro parámetros que, según el cierre del texto, condicionan la calidad de una rasterización? {
+~%25%El valor de cada píxel #Correcto: es uno de los cuatro parámetros que retoma el cierre del texto.
+~%25%La resolución espacial #Correcto: es otro de los cuatro parámetros que retoma el cierre del texto.
+~%25%La extensión #Correcto: es otro de los cuatro parámetros que retoma el cierre del texto.
+~%25%El valor NoData #Correcto: es el cuarto parámetro que retoma el cierre del texto.
+~%-100%El sistema de referencia del proyecto #Incorrecto: el sistema de referencia se menciona como una advertencia dentro de la resolución, pero no es uno de los cuatro parámetros que enumera el cierre del texto.
+}
+
+::T2-S5-03:: {F#Incorrecto: el texto dice exactamente lo contrario: entender estas decisiones hace que el proceso deje de ser mecánico.#Correcto: efectivamente, el texto sostiene que el proceso deja de ser un conjunto de pasos mecánicos y se convierte en una serie de decisiones analíticas.} Según el texto, entender bien las cuatro decisiones de rasterización convierte el proceso en un conjunto de pasos mecánicos en un cuadro de diálogo de QGIS.
+
+::T2-S5-04:: ¿En función de qué deben tomarse, según el texto, las decisiones técnicas de rasterización? {
+=En función del objetivo del estudio, no al revés #Correcto: es la conclusión exacta con la que cierra el texto.
+~En función de la configuración por defecto de QGIS #Incorrecto: el texto propone justamente no depender de los valores por defecto sin criterio.
+~En función del tamaño máximo de archivo permitido por el software #Incorrecto: el texto no plantea ese criterio como el que debe guiar las decisiones.
+~En función de lo que sea más rápido de ejecutar #Incorrecto: el texto no propone la velocidad de ejecución como criterio de estas decisiones.
+}
+
+::T2-S5-05:: ¿Cuáles de los siguientes análisis posteriores menciona el texto como condicionados por una buena rasterización? {
+~%33.33333%Álgebra de mapas #Correcto: es uno de los tres análisis que menciona el cierre del texto.
+~%33.33333%Análisis multicriterio #Correcto: es otro de los tres análisis que menciona el cierre del texto.
+~%33.33333%Alineación con otros rásteres #Correcto: es el tercer análisis que menciona el cierre del texto.
+~%-100%Interpolación espacial #Incorrecto: la interpolación no se menciona en esta oración de cierre del texto.
+~%-100%Compresión de archivos #Incorrecto: la compresión de archivos no se menciona en esta oración de cierre del texto.
+}
+
+::T2-S5-06:: {T#Incorrecto: el texto lo afirma de forma explícita, ya desde el título de esta sección de cierre.#Correcto: efectivamente, el texto afirma explícitamente que ninguna de las cuatro decisiones es neutra.} El texto afirma que ninguna de las cuatro decisiones de rasterización es neutra.
+
+::T2-S5-07:: ¿Qué relación establece el texto entre las decisiones de rasterización y el análisis multicriterio o el álgebra de mapas? {
+=Que las decisiones tomadas al rasterizar condicionan la calidad de esos análisis posteriores #Correcto: es la relación exacta que establece el cierre del texto.
+~Que el álgebra de mapas reemplaza por completo a la rasterización #Incorrecto: el texto no plantea ese reemplazo.
+~Que el análisis multicriterio es un requisito previo para poder rasterizar #Incorrecto: el texto no exige el análisis multicriterio como requisito previo.
+~Que no existe ninguna relación entre ambos procesos #Incorrecto: el texto explícitamente conecta la calidad de la rasterización con estos análisis posteriores.
+}
+
+::T2-S5-08:: Según el cierre del texto, ¿qué "buena noticia" plantea sobre entender estas cuatro decisiones? {
+=Que gran parte del trabajo de rasterización deja de ser mecánico y se convierte en una serie de decisiones analíticas #Correcto: es la conclusión exacta con la que cierra el texto.
+~Que ya no hace falta prestar atención al valor NoData #Incorrecto: el texto no plantea esa conclusión; al contrario, insiste en la atención al valor NoData.
+~Que QGIS automatiza por completo estas cuatro decisiones #Incorrecto: el texto no describe ninguna automatización de estas decisiones.
+~Que estas decisiones solo importan en la primera rasterización del curso #Incorrecto: el texto no limita la relevancia de estas decisiones a un único caso.
+}
