@@ -1,0 +1,64 @@
+---
+title: "Texto III – Álgebra de mapas"
+author: "Felipe Sodré Mendes Barros; Demian Lorán"
+lang: es
+bibliography: ../../references.bib
+csl: ../../apa.csl
+output-file: "Texto III – Álgebra de mapas"
+format:
+  docx: default
+  pdf: default
+---
+
+*Cátedra SIG III[^licencia]*
+
+[^licencia]:
+    {{< include ../../_licencia.md >}}
+
+En el texto anterior trabajamos las cuatro decisiones que definen la rasterización de un dato vectorial, el proceso por el cual construimos una capa ráster a partir de geometrías puntuales, lineales o poligonales. Con esa capa ya lista (o con cualquier otra capa ráster de origen, sea satelital, interpolada o derivada de un modelo digital de elevación) entramos de lleno en el modelado espacial con datos matriciales. El primer enfoque que vamos a desarrollar es el álgebra de mapas, la base operativa sobre la que se apoyan buena parte de las técnicas de análisis ráster que van a aparecer en las próximas clases. En este texto vemos qué es el álgebra de mapas y qué papel cumple GDAL para que funcione en QGIS, repasamos sus usos más frecuentes en el análisis territorial, aprendemos la sintaxis de la Calculadora Ráster, y nos detenemos con cuidado en un problema interpretativo habitual al jerarquizar y ponderar capas. Cerramos ubicando el álgebra de mapas dentro de un repertorio más amplio de técnicas, y con un ejemplo de aplicación real que muestra estas operaciones puestas en práctica en un caso concreto.
+
+## ¿Qué es el álgebra de mapas?
+
+El álgebra de mapas es un conjunto de operaciones matemáticas y lógicas realizadas entre capas ráster, donde los cálculos se aplican píxel a píxel: cada píxel de salida es el resultado de una operación entre los valores de los píxeles que ocupan la misma posición geográfica en las capas de entrada. El nombre puede sonar nuevo, pero el principio no lo es: aunque quizás no lo hayamos llamado así explícitamente, ya trabajamos con este enfoque en Procesamiento Digital de Imágenes (PDI), cada vez que calculamos índices espectrales multiespectrales (como el NDVI o el NDWI) o multitemporales (como el ΔNDBI o los índices de severidad de incendios). El NDVI, por ejemplo, se obtiene con la fórmula NDVI = (NIR − Red) / (NIR + Red), y el ΔNDBI con ΔNDBI = NDBI_t2 − NDBI_t1: en ambos casos, una fórmula se aplica de forma sistemática a cada conjunto de valores de píxeles en las bandas o imágenes involucradas. Eso es, en esencia, álgebra de mapas aplicada sobre datos satelitales. Lo que cambia a partir de ahora es reconocer que ese mismo principio es transferible a muchas otras aplicaciones más allá de los índices espectrales, y que se convierte en una de las herramientas más versátiles del análisis ráster en un SIG.
+
+![Operación local de suma entre dos capas ráster: el valor de cada celda de la capa de salida es el resultado de sumar los valores de las celdas que ocupan la misma posición en las capas de entrada (las celdas grises representan NoData, que se propaga al resultado) [@tenkanen2025pythongis].](imagenes/Suma_local_rasters.png){#fig-suma-local}
+
+Estas operaciones pueden ser tan simples como multiplicar todos los valores de una capa por un número fijo (`"capa"@1 * 10`), o tan complejas como combinar varias capas mediante divisiones, sumas y condiciones lógicas en una misma expresión (`("capa1"@1 + "capa2"@1) / "capa3"@1`). En cualquier caso, el resultado siempre es una nueva capa ráster cuyos valores reflejan el producto matemático de esa combinación. El motor que permite que estas operaciones funcionen en QGIS es GDAL (Geospatial Data Abstraction Library), una librería libre y robusta que se usa también en otros entornos como R, Python o GRASS: es, literalmente, el "motor" detrás de la Calculadora Ráster y de buena parte de las funciones de análisis geoespacial de QGIS, y vale la pena tenerlo presente porque su [documentación](https://gdal.org/en/stable/index.html) es un buen lugar para seguir profundizando en el universo de las operaciones ráster.
+
+## Usos comunes del álgebra de mapas en el SIG
+
+El álgebra de mapas permite realizar análisis territoriales que serían extremadamente lentos, o directamente inviables, si intentáramos reproducirlos con datos vectoriales, sobre todo a escala regional o continental, donde el análisis vectorial queda limitado a consultas espaciales puntuales. Algunos ejemplos habituales:
+
+- Identificación de áreas de alta susceptibilidad a inundación, combinando pendiente y tipo de uso del suelo.
+- Análisis de riesgo de incendios, operando capas de humedad del suelo y presencia de cobertura forestal.
+- Evaluación de riesgo de erosión, integrando pendiente con tipo de cobertura y prácticas agrícolas.
+- Modelos de aptitud territorial, jerarquizando zonas según criterios definidos por el equipo de trabajo.
+
+En todos estos casos, el punto en común es el mismo: varias capas ráster, cada una representando una variable del territorio, se combinan mediante una expresión matemática para producir una capa de salida que sintetiza esa combinación en un único valor por píxel.
+
+## La sintaxis de la Calculadora Ráster en QGIS
+
+Para poner en práctica el álgebra de mapas usamos la herramienta "Calculadora ráster" de QGIS, que permite construir expresiones matemáticas con las capas ráster cargadas en el proyecto. Cada capa se referencia por su nombre seguido de `@` y un número de banda: `"ndvi_2024"@1` indica que se va a usar la banda 1 de la capa `ndvi_2024`, y del mismo modo `"pendiente"@1` o `"uso_suelo"@1` señalan las bandas únicas de esas capas. Cuando una capa tiene más de una banda, como suele ocurrir con las imágenes satelitales multiespectrales, cada banda puede referenciarse por separado: `"landsat_2022"@1` para la banda azul, `"landsat_2022"@4` para la banda del infrarrojo cercano, y así sucesivamente. A partir de esa sintaxis básica se arman expresiones tan variadas como una multiplicación por una constante (`"ndvi_2024"@1 * 100`), una suma entre capas (`"pendiente"@1 + "uso_suelo"@1`) o una división entre capas (`"humedad"@1 / "combustible"@1`), y todas ellas comparten la misma lógica de fondo: una operación que se aplica celda a celda entre las capas involucradas.
+
+## Jerarquización y ponderación: cuidado con la interpretación de resultados
+
+Una de las aplicaciones más potentes del álgebra de mapas es la jerarquización de píxeles, útil para identificar zonas con mayor o menor susceptibilidad frente a un fenómeno. Pero este enfoque requiere precaución interpretativa, especialmente al sumar capas que representan categorías distintas. Supongamos que sumamos una capa de pendiente (con valores categóricos de 0 a 2) con otra de uso del suelo (con valores también categóricos de 1 a 4): el resultado puede dar un valor 4 generado por combinaciones muy distintas entre sí, como pendiente 0 más uso 4, pendiente 1 más uso 3, o pendiente 2 más uso 2. Esa ambigüedad implica una pérdida real de contexto en la interpretación: un valor final de 4 puede esconder zonas con pendiente baja, algo que en muchos análisis no representaría un riesgo real, junto con zonas de pendiente alta que sí lo representarían.
+
+Una estrategia habitual para evitar esta trampa es multiplicar una de las capas por 10 o por 100 antes de sumarla, de modo de conservar la trazabilidad de cada componente dentro del resultado: `"pendiente"@1 * 10 + "uso_suelo"@1`. De este modo, un valor final como 21 se puede leer directamente como pendiente = 2 (alto) y uso del suelo = 1, sin ambigüedad posible. Ese mismo mecanismo, además de resolver el problema de la trazabilidad, sirve para aplicar ponderaciones explícitas cuando se quiere dar mayor peso a una de las capas por sobre las demás: en la expresión `"uso_suelo"@1 + 2 * "pendiente"@1`, la pendiente pesa el doble que el uso del suelo en el resultado final, lo que permite ajustar el análisis a los criterios que defina cada estudio en particular.
+
+## Más allá del NDVI y la pendiente: el resto del repertorio de la asignatura
+
+Es tentador, después de ver estos ejemplos, asociar el álgebra de mapas únicamente con índices espectrales como el NDVI o con variables de terreno como la pendiente, porque son las que venimos arrastrando de PDI y de Geografía Física y las que más fácil resulta calcular. Pero reducir el análisis ráster a ese repertorio conocido deja afuera buena parte de lo que la asignatura tiene para ofrecer. El álgebra de mapas es, en rigor, el mecanismo operativo que hace posible casi todas las técnicas que vamos a ver en las próximas clases, no un fin en sí mismo: los modelos de costo acumulado combinan capas de fricción del terreno mediante estas mismas operaciones celda a celda; la interpolación espacial (IDW, Kriging, superficies de tendencia) genera capas ráster continuas a partir de puntos de muestreo que después se combinan con otras variables del mismo modo que venimos viendo acá; los filtros y la estadística focal aplican estas operaciones a vecindarios de píxeles en lugar de a píxeles aislados; y la reclasificación reorganiza los valores de una capa como paso previo, muchas veces indispensable, antes de sumarla o ponderarla junto con las demás. Vale la pena tener presente esta variedad desde ahora, porque un modelo de aptitud o de riesgo bien construido casi nunca se resuelve con una sola técnica: combina varias de ellas, y el álgebra de mapas es el lenguaje común que permite integrarlas.
+
+## Un ejemplo de aplicación
+
+Un caso que muestra bien estas ideas puestas en práctica es el Mapa de Riesgo a Inundaciones desarrollado para el sector norte del ejido urbano de la ciudad de Mar del Plata [@montenegro2021riesgo], elaborado por el área de SIG de Obras Sanitarias Sociedad de Estado (OSSE) para planificar futuros proyectos de agua y saneamiento en zonas propensas a anegamientos por lluvias recurrentes. El equipo construyó el mapa final combinando dos capas intermedias, un mapa de amenaza y un mapa de vulnerabilidad, cada una resultante de la superposición de varias variables. La amenaza se calculó a partir de la altimetría del terreno, la cercanía a cursos de agua, la cobertura vegetal (obtenida mediante un NDVI derivado de las bandas del rojo y del infrarrojo cercano de imágenes Sentinel-2), la capacidad hidráulica de la red pluvial y el tipo de calle; la vulnerabilidad, a partir de variables socioeconómicas censales como la presencia de asentamientos precarios, la pobreza, la densidad de población y de vivienda, la calidad constructiva y la cobertura de los servicios de agua y cloaca.
+
+El procedimiento aplicado es exactamente el de jerarquización ponderada que acabamos de desarrollar: cada variable se categorizó en una escala de 1 a 4 según su nivel de amenaza o de vulnerabilidad, y a cada una se le asignó una ponderación distinta según su peso relativo en el fenómeno (la presencia de asentamientos precarios y la pobreza recibieron la ponderación más alta, 10, mientras que variables de menor incidencia recibieron ponderaciones más bajas). Todas las capas se llevaron a formato ráster con una resolución de 5 m², y la Calculadora Ráster de QGIS se usó para multiplicar cada capa por su ponderación y sumar los resultados, primero dentro de cada mapa intermedio (amenaza y vulnerabilidad por separado) y después entre ambos, para obtener el Mapa de Riesgo final.
+
+Más allá del resultado cartográfico en sí, el caso ilustra algo que conviene tener presente: el álgebra de mapas no es un ejercicio abstracto de clase, sino la herramienta que un organismo público usa de manera concreta para tomar decisiones sobre infraestructura y planificación urbana, con datos reales de un territorio argentino. Las mismas decisiones que discutimos en este texto (cómo categorizar cada variable, qué ponderación asignarle, cómo evitar la ambigüedad al sumar capas) son, en un caso como este, decisiones con consecuencias directas sobre la gestión del riesgo de una ciudad.
+
+## Referencias
+
+::: {#refs}
+:::

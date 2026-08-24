@@ -11,6 +11,17 @@ Este repositorio se usa para organizar y crear los materiales de cátedra de **S
 - El objetivo pedagógico central de la materia **no es solo manejo de software**: es que los alumnos comprendan a fondo el potencial (y las limitaciones) del **modelo de datos matricial/ráster** para el análisis y el modelado espacial — álgebra de mapas, modelado mono/multicriterio, modelos de costo, interpolación, análisis de paisaje, cubos de datos espacio-temporales.
 - Este repositorio no es un proyecto de software: no hay build/lint/tests. El trabajo es de autoría y edición de contenido educativo, más algunos notebooks ilustrativos (ver más abajo).
 - Cuando se considere importante agregar imágenes a un texto (para ilustrar un concepto, un proceso o un resultado esperado), buscarlas en la bibliografía disponible (`Bibliografia/`) o en internet, priorizando páginas de instituciones de referencia (organismos oficiales, universidades, agencias espaciales, proveedores de datos reconocidos, etc.). Toda imagen debe llevar epígrafe definido y su cita correspondiente en formato APA 7ª edición.
+- Cuando un texto del Cuadernillo se preste a ello, conviene cerrarlo con un **ejemplo de aplicación
+  real** (dos o tres párrafos) tomado de un artículo científico en español que haya aplicado
+  concretamente los conceptos desarrollados en ese texto, preferentemente de autoría o desarrollo en
+  Argentina y de extensión acotada (orientativamente 5 a 10 páginas de cuerpo narrativo). Buscarlo en
+  repositorios como los Anais del Simposio Brasileiro de Sensoriamento Remoto (SBSR,
+  `marte.sid.inpe.br`), las publicaciones de IDERA (`idera.gob.ar/index.php/publicaciones/libros-idera`),
+  SciELO, Redalyc o Google Scholar. El ejemplo debe detallar procedimientos coherentes con la temática del
+  texto (qué capas o variables usa el estudio, cómo las combina), no limitarse a mencionar el tema de
+  forma genérica, y el artículo debe sumarse como entrada nueva en `references.bib` y citarse con
+  `[@clave]`, igual que cualquier otra fuente (ver "Producción de textos y presentaciones con Quarto" más
+  abajo).
 
 ## Con relación a los textos
 

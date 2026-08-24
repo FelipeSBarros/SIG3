@@ -29,7 +29,7 @@ en particular interpolación espacial, que además está respaldada por la retro
 ## Revisión tema por tema
 
 ### Texto I — Introducción a los Datos Ráster
-**Actualizado (2026-08-11): los cuatro puntos débiles señalados originalmente ya están resueltos** en
+**Estado: finalizado.** **Actualizado (2026-08-11): los cuatro puntos débiles señalados originalmente ya están resueltos** en
 `Cuadernillo de catedra/nuevos/Texto I – Introducción a los Datos Ráster.qmd`. Buena base conceptual —qué es un ráster,
 estructura, tipos de dato (continuo/categórico, con la terminología grade regular/matriz temática),
 mono/multibanda (con el gancho a espacios celulares y cubos de datos), las cuatro resoluciones, y el marco
@@ -47,16 +47,25 @@ El único punto pendiente es menor y deliberado: Texto I no da un catálogo comp
 lo cubre en profundidad y al que Texto I remite explícitamente al cierre. No correspondería duplicarlo.
 
 ### Texto II — Rasterización de datos vectoriales
-Sólido y muy práctico: valor de píxel (campo vs. valor fijo), resolución en QGIS, extensión, y una muy
-buena sección sobre NoData y sus riesgos. Podría sumar un apartado sobre el camino inverso —
-ráster→vector (poligonización/vectorización) —, que hoy no tiene desarrollo dedicado en ningún texto del
-Cuadernillo (sí se lo menciona brevemente en Texto I).
+**Estado: finalizado.** Sólido y muy práctico: valor de píxel (campo vs. valor fijo), resolución en QGIS,
+extensión, y una muy buena sección sobre NoData y sus riesgos. Queda como posible mejora futura, no
+bloqueante para esta cursada, sumar un apartado sobre el camino inverso (ráster→vector,
+poligonización/vectorización), que hoy no tiene desarrollo dedicado en ningún texto del Cuadernillo (sí se
+lo menciona brevemente en Texto I).
 
 ### Texto III — Álgebra de mapas
-Sólido, con buena conexión con lo ya visto en Procesamiento Digital de Imágenes (NDVI, ΔNDBI) y ejemplos
-de jerarquización/ponderación bien explicados (incluye la trampa de sumar categorías sin multiplicar por
-10/100). Podría cerrar con un puente explícito hacia la variedad de técnicas disponibles en la Unidad II
-(no quedarse en NDVI/declividad), anticipando el punto que aparece con fuerza en Reflexiones 2025.
+**Actualizado (2026-08-24): migrado a `.qmd`** en `Cuadernillo de catedra/nuevos/Texto III – Álgebra de
+mapas.qmd`. Se conservó la buena conexión con Procesamiento Digital de Imágenes (NDVI, ΔNDBI) y los
+ejemplos de jerarquización/ponderación (incluida la trampa de sumar categorías sin multiplicar por
+10/100), y se sumaron dos piezas nuevas: un apartado puente ("Más allá del NDVI y la pendiente: el resto
+del repertorio de la Unidad II") que ubica el álgebra de mapas como mecanismo operativo común a modelos de
+costo, interpolación espacial, filtros/estadística focal y reclasificación, para no quedarse en
+NDVI/declividad como señalaba Reflexiones 2025; y un cierre "Un ejemplo de aplicación" que describe el
+caso real del Mapa de Riesgo a Inundaciones de Mar del Plata [@montenegro2021riesgo] (ponderación de
+variables de amenaza y vulnerabilidad, incluido un NDVI Sentinel-2, sumadas en la Calculadora Ráster de
+QGIS), citado como referencia bibliográfica formal. Esta idea de cerrar los textos con un ejemplo de
+aplicación real citado quedó incorporada como convención general en `CLAUDE.md`, para aplicarse también a
+otros textos del Cuadernillo cuando el tema se preste a ello.
 
 ### Texto IV — Artículos científicos y discurso referido
 Bien escrito y claro (estructura IMRyD, funciones del discurso referido), pero genérico: no tiene ningún
@@ -109,12 +118,12 @@ corrección lingüística conjunta sobre todo el Cuadernillo en algún momento d
 ## Priorización sugerida
 
 1. **Interpolación espacial real** (IDW/Kriging/Spline) — gap más grande, respaldado por Reflexiones 2025.
-2. **Texto I ampliado** (ver `Cuadernillo de catedra/nuevos/Texto I – Introducción a los Datos Ráster.qmd`; los puntos débiles
-   originalmente señalados ya están resueltos — ver nota de 2026-08-11 en la revisión tema por tema).
-3. Textos nuevos para Estadística zonal/Sieve, Digitalización/Georreferenciación, Modelos de costo,
+2. Textos nuevos para Estadística zonal/Sieve, Digitalización/Georreferenciación, Modelos de costo,
    Modelo de elevación/superficie, Reclasificación.
-4. Ajustes menores en Textos II, III, IV, V (apartados y ejemplos puntuales, detallados arriba).
-5. Pasada de corrección lingüística transversal.
+3. Ajustes menores en Textos IV y V (apartados y ejemplos puntuales, detallados arriba).
+4. Pasada de corrección lingüística transversal.
+
+**Textos I, II y III ya finalizados** (ver notas de actualización en la revisión tema por tema).
 
 ## Fuentes nuevas: libros del INPE (agregados a Bibliografía el 2026-08-10)
 
@@ -159,8 +168,8 @@ prosa; esta tabla es solo un mapa rápido para priorizar.
 | Texto | Clase correlativa | Qué debería cubrir | Qué cubre hoy | Qué falta agregar |
 |---|---|---|---|---|
 | **Texto I** – Introducción a los Datos Ráster | Clase 1 (Rasterización, parte introductoria) | Características, propiedades y relevancia de la estructura ráster (Unidad I) | Qué es un ráster, estructura, tipos de dato, cuatro resoluciones, fuentes de datos, marco geo-campo/geo-objeto (ampliado con INPE), interconversión vector↔ráster desarrollada, beneficios/debilidades dedicados, y cuidados prácticos (tabla de atributos, nomenclatura, archivos auxiliares) | Sin brechas relevantes — remite a Texto VIII para el catálogo completo de formatos |
-| **Texto II** – Rasterización de datos vectoriales | Clase 1 (Rasterización, parte técnica) | Métodos y procesos de creación de ráster (Unidad II) | Valor de píxel (campo/valor fijo), resolución, extensión, NoData | Vectorización (camino inverso ráster→vector), sin desarrollo dedicado en ningún texto |
-| **Texto III** – Álgebra de mapas | Clase 2 (Álgebra de mapas) | Conceptos y fundamentos del modelado espacial (Unidad II) | Operaciones celda a celda, jerarquización/ponderación, NDVI/ΔNDBI | Puente explícito hacia el resto de técnicas de la Unidad II, para no quedarse en NDVI/declividad (Reflexiones 2025) |
+| **Texto II** – Rasterización de datos vectoriales | Clase 1 (Rasterización, parte técnica) | Métodos y procesos de creación de ráster (Unidad II) | Valor de píxel (campo/valor fijo), resolución, extensión, NoData | Sin brechas bloqueantes — vectorización (camino inverso ráster→vector) queda como mejora futura no urgente |
+| **Texto III** – Álgebra de mapas | Clase 2 (Álgebra de mapas) | Conceptos y fundamentos del modelado espacial (Unidad II) | Operaciones celda a celda, jerarquización/ponderación, NDVI/ΔNDBI, puente hacia el resto de técnicas de la Unidad II, ejemplo de aplicación real citado (Montenegro et al., 2021) | Sin brechas relevantes |
 | **Texto IV** – Artículos científicos y discurso referido | Clase 3a (Análisis de texto/Buzai) | Lectura académica aplicada al dominio ráster/SIG | Estructura IMRyD, funciones del discurso referido (bien explicado, pero genérico) | Ejemplo propio del dominio ráster/SIG (p. ej. citando papers ya usados en Texto IX/X) |
 | **Texto V** – Calculadora Ráster en QGIS | Clases 3b/4 (mono/multicriterio, uso de calculadora) | Manipulación de ráster: cálculos (Unidad II) | Aritmética, trigonométricas, condicionales con máscaras | Corregir error de redacción ("trigonométricas" en la sección de aritmética); sumar funciones estadísticas (`min`/`max`/`sum`) y sintaxis `if()` explícita |
 | **Texto VI** – Operaciones lógicas mono- y multicriterio | Clases 3b/4 (mono/multicriterio) | Análisis ráster mono y multicriterio (Unidad III) | Comparación, AND/OR/NOT, teoría de conjuntos, alineamiento, jerarquización vs. filtro — texto de mejor nivel del Cuadernillo | Nada urgente; candidato a sumar Fuzzy/Bayesiano/Redes Neuronales (cap. 9 INPE) cuando se reescriba como `.qmd` |
