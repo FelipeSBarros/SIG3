@@ -1,0 +1,5 @@
+*.docx
+*.pdf
+
+/.quarto/
+__pycache__/

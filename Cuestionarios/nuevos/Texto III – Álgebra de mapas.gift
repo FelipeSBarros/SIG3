@@ -1,0 +1,382 @@
+// Cuestionario autoevaluativo — Texto III – Álgebra de mapas
+// SIG III — Tecnicatura Universitaria en Sistemas de Información Geográfica y Teledetección
+// Formato GIFT (importable a Moodle). Ver criterios de diseño en CLAUDE.md ("Actividades autoevaluativas"):
+// preguntas autocorregibles, devolución por alternativa, ceñidas al contenido del texto correspondiente.
+// En las preguntas Verdadero/Falso, el marcador {T#..#..}/{F#..#..} define la respuesta que Moodle
+// califica como correcta (T=Verdadero, F=Falso); el orden del feedback es siempre incorrecto-primero,
+// correcto-segundo, según el parser oficial de Moodle (question/format/gift/format.php).
+//
+// Este cuestionario suma tres preguntas con imagen (T3-S1-10, T3-S3-07, T3-S4-09), generadas con
+// `graficos_raster.py` desde `Clases/Actividades prácticas/Figuras_Cuadernillo.ipynb` y guardadas en
+// `Cuestionarios/nuevos/imagenes/`. El <img src="imagenes/..."> de cada una es un placeholder: GIFT es
+// texto plano y no puede empaquetar archivos binarios, así que hay que subir esos tres PNG a la pregunta
+// correspondiente desde el editor de Moodle después de importar (o alojarlos en una URL accesible) y
+// ajustar el `src` antes de publicar el cuestionario.
+
+$CATEGORY: SIG III/Texto III – Álgebra de mapas/1. ¿Qué es el álgebra de mapas?
+
+::T3-S1-01:: ¿Cómo define el texto al álgebra de mapas? {
+=Un conjunto de operaciones matemáticas y lógicas entre capas ráster, aplicadas píxel a píxel #Correcto: es la definición exacta que da el texto.
+~Un conjunto de operaciones exclusivas de QGIS que no existen en otros programas #Incorrecto: el texto aclara que GDAL (el motor detrás de estas operaciones) se usa también en R, Python o GRASS, no es exclusivo de QGIS.
+~Una técnica para convertir datos vectoriales en datos ráster #Incorrecto: eso es rasterizar, un proceso distinto desarrollado en el texto anterior.
+~Un método para comprimir archivos ráster de gran tamaño #Incorrecto: el texto no relaciona el álgebra de mapas con la compresión de archivos.
+}
+
+::T3-S1-02:: Según el álgebra de mapas, ¿de qué depende el valor de cada píxel de la capa de salida? {
+=De una operación entre los valores de los píxeles que ocupan la misma posición geográfica en las capas de entrada #Correcto: es la definición exacta que da el texto.
+~Del valor promedio de toda la capa de entrada #Incorrecto: el texto describe una operación píxel a píxel, no un promedio global de la capa.
+~De un valor aleatorio asignado por el software #Incorrecto: el texto no describe ningún componente aleatorio en el álgebra de mapas.
+~De la posición del píxel dentro de la extensión total del ráster, sin relación con las capas de entrada #Incorrecto: el valor de salida depende de los valores de entrada en esa posición, no de la posición en sí misma.
+}
+
+::T3-S1-03:: Según el texto, ¿por qué el álgebra de mapas "puede sonar nuevo pero el principio no lo es"? {
+=Porque ya se trabaja con este enfoque en Procesamiento Digital de Imágenes, cada vez que se calculan índices como el NDVI o el NDWI #Correcto: es la explicación exacta que da el texto para conectar el álgebra de mapas con contenidos ya vistos.
+~Porque el álgebra de mapas se enseña desde el primer año de la carrera #Incorrecto: el texto no hace esa afirmación sobre el plan de estudios.
+~Porque todos los softwares SIG usan el mismo motor de cálculo #Incorrecto: el texto no da esa razón para la afirmación.
+~Porque los datos vectoriales ya usan el mismo tipo de operaciones #Incorrecto: el texto conecta el álgebra de mapas con PDI (índices espectrales sobre ráster), no con operaciones vectoriales.
+}
+
+::T3-S1-04:: ¿Cuál es la fórmula del NDVI que da el texto? {
+=NDVI \= (NIR − Red) / (NIR + Red) #Correcto: es la fórmula exacta que cita el texto.
+~NDVI \= (NIR + Red) / (NIR − Red) #Incorrecto: la fórmula tiene la resta en el numerador y la suma en el denominador, no al revés.
+~NDVI \= NIR − Red #Incorrecto: falta la normalización por la suma de ambas bandas en el denominador.
+~NDVI \= (NIR × Red) / (NIR + Red) #Incorrecto: el numerador es una resta entre bandas, no una multiplicación.
+}
+
+::T3-S1-05:: ¿Cómo se calcula el ΔNDBI, según el texto? {
+=ΔNDBI \= NDBI_t2 − NDBI_t1 #Correcto: es la fórmula exacta que da el texto, una resta entre dos momentos del tiempo (multitemporal).
+~ΔNDBI \= NDBI_t1 + NDBI_t2 #Incorrecto: el texto define al ΔNDBI como una resta entre dos fechas, no una suma.
+~ΔNDBI \= NDBI_t2 / NDBI_t1 #Incorrecto: la fórmula que da el texto es una resta, no una división.
+~ΔNDBI \= (NDBI_t2 − NDBI_t1) / 2 #Incorrecto: el texto no divide el resultado por ningún factor.
+}
+
+::T3-S1-06:: {F#Incorrecto: el texto dice explícitamente que ese mismo principio "es transferible a muchas otras aplicaciones más allá de los índices espectrales".#Correcto: en efecto, el texto es explícito en que el álgebra de mapas se extiende más allá de los índices espectrales satelitales.} Según el texto, el álgebra de mapas es un enfoque exclusivo del Procesamiento Digital de Imágenes y no se puede aplicar a otro tipo de capas ráster.
+
+::T3-S1-07:: Según el texto, ¿qué produce siempre una operación de álgebra de mapas como resultado? {
+=Una nueva capa ráster cuyos valores reflejan el producto matemático de la combinación #Correcto: es la afirmación exacta que hace el texto.
+~Una tabla de atributos con los valores calculados #Incorrecto: un ráster no tiene tabla de atributos, según lo visto en el texto anterior; el resultado es otra capa ráster.
+~Un archivo vectorial con las zonas que cumplen la condición #Incorrecto: el resultado del álgebra de mapas es siempre una capa ráster, no un archivo vectorial.
+~Un valor único que resume toda la capa #Incorrecto: el resultado es una capa completa, con un valor por píxel, no un único valor global.
+}
+
+::T3-S1-08:: ¿Qué es GDAL, según el texto? {
+=Una librería libre y robusta que funciona como el motor detrás de la Calculadora Ráster y de buena parte del análisis geoespacial de QGIS #Correcto: es la definición exacta que da el texto.
+~Un formato de archivo ráster propio de QGIS #Incorrecto: GDAL es una librería, no un formato de archivo.
+~Un complemento opcional que hay que instalar aparte en QGIS #Incorrecto: el texto no lo presenta como un complemento opcional, sino como el motor que ya está detrás de estas funciones.
+~Una base de datos de capas ráster gratuitas #Incorrecto: GDAL no es una base de datos de capas, sino una librería de procesamiento.
+}
+
+::T3-S1-09:: ¿En qué otros entornos, además de QGIS, señala el texto que se usa GDAL? {
+~%33.33333%R #Correcto: es uno de los entornos que menciona el texto.
+~%33.33333%Python #Correcto: es otro de los entornos que menciona el texto.
+~%33.33333%GRASS #Correcto: es el tercer entorno que menciona el texto.
+~%-100%ArcGIS #Incorrecto: el texto no menciona a ArcGIS entre los entornos donde se usa GDAL.
+~%-100%Google Earth Engine #Incorrecto: el texto no menciona a Google Earth Engine en este apartado.
+}
+
+::T3-S1-10:: <img src="imagenes/T3_operacion_misteriosa_1.png" alt="Capa A, Capa B y Resultado, tres grillas de 3x3 con valores numéricos" style="max-width:520px"><br>La imagen muestra dos capas de entrada (Capa A y Capa B) y el Resultado de combinarlas celda a celda. ¿Qué operación local se aplicó? {
+=Suma de la Capa A y la Capa B #Correcto: cada celda del Resultado es exactamente la suma de las celdas correspondientes de la Capa A y la Capa B (por ejemplo, 5 + 3 \= 8 en la celda superior izquierda).
+~Resta de la Capa A y la Capa B #Incorrecto: si fuera una resta, la celda superior izquierda daría 5 − 3 \= 2, no 8 como muestra el Resultado.
+~Multiplicación de la Capa A y la Capa B #Incorrecto: si fuera una multiplicación, la celda superior izquierda daría 5 × 3 \= 15, no 8 como muestra el Resultado.
+~División de la Capa A y la Capa B #Incorrecto: si fuera una división, la celda superior izquierda daría 5 / 3 ≈ 1.67, no el valor entero 8 que muestra el Resultado.
+}
+
+$CATEGORY: SIG III/Texto III – Álgebra de mapas/2. Usos comunes del álgebra de mapas en el SIG
+
+::T3-S2-01:: Según el texto, ¿por qué el álgebra de mapas conviene especialmente a escala regional o continental? {
+=Porque a esa escala el análisis vectorial queda limitado a consultas espaciales puntuales #Correcto: es la razón exacta que da el texto para esta ventaja del álgebra de mapas.
+~Porque a esa escala los archivos vectoriales pesan menos que los rásteres #Incorrecto: el texto no compara el peso de los archivos entre ambos formatos en este punto.
+~Porque el análisis vectorial no puede representar más de un país a la vez #Incorrecto: el texto no hace esa afirmación sobre el vector.
+~Porque a gran escala QGIS deja de admitir capas vectoriales #Incorrecto: el texto no plantea ninguna limitación de software de ese tipo.
+}
+
+::T3-S2-02:: ¿Cuáles de los siguientes son, según el texto, ejemplos habituales de aplicación del álgebra de mapas en el SIG? {
+~%25%Identificación de áreas de alta susceptibilidad a inundación, combinando pendiente y uso del suelo #Correcto: es uno de los cuatro ejemplos que da el texto.
+~%25%Análisis de riesgo de incendios, operando humedad del suelo y cobertura forestal #Correcto: es otro de los cuatro ejemplos que da el texto.
+~%25%Evaluación de riesgo de erosión, integrando pendiente, cobertura y prácticas agrícolas #Correcto: es otro de los cuatro ejemplos que da el texto.
+~%25%Modelos de aptitud territorial, jerarquizando zonas según criterios definidos por el equipo de trabajo #Correcto: es el cuarto ejemplo que da el texto.
+~%-100%Cálculo de la distancia más corta entre dos direcciones postales #Incorrecto: ese es un problema típico de análisis de redes vectorial, no uno de los ejemplos que da el texto.
+~%-100%Corrección geométrica de una imagen satelital antes de usarla #Incorrecto: el texto no incluye la corrección geométrica entre sus ejemplos de aplicación del álgebra de mapas.
+}
+
+::T3-S2-03:: ¿Qué dos capas combina, según el texto, el ejemplo de riesgo de incendios? {
+=Humedad del suelo y presencia de cobertura forestal #Correcto: son las dos capas exactas que menciona el texto para este ejemplo.
+~Pendiente y tipo de uso del suelo #Incorrecto: esa combinación corresponde al ejemplo de susceptibilidad a inundación, no al de incendios.
+~Altimetría y cercanía a cursos de agua #Incorrecto: esas capas no aparecen en este apartado; corresponden al ejemplo de aplicación real del cierre del texto.
+~Pendiente, cobertura y prácticas agrícolas #Incorrecto: esa combinación de tres variables corresponde al ejemplo de riesgo de erosión.
+}
+
+::T3-S2-04:: ¿Qué dos variables combina, según el texto, el ejemplo de susceptibilidad a inundación? {
+=Pendiente y tipo de uso del suelo #Correcto: son las dos variables exactas que menciona el texto para este ejemplo.
+~Humedad del suelo y cobertura forestal #Incorrecto: esa combinación corresponde al ejemplo de riesgo de incendios, no al de inundación.
+~Densidad de población y calidad constructiva #Incorrecto: esas variables aparecen recién en el ejemplo de aplicación real del cierre del texto, no en este apartado.
+~Resolución espacial y resolución temporal #Incorrecto: esas son propiedades técnicas del ráster vistas en el texto anterior, no variables de un análisis de inundación.
+}
+
+::T3-S2-05:: ¿Qué tres factores integra, según el texto, la evaluación de riesgo de erosión? {
+=Pendiente, tipo de cobertura y prácticas agrícolas #Correcto: son los tres factores exactos que menciona el texto para este ejemplo.
+~Humedad del suelo, cobertura forestal y altimetría #Incorrecto: esa combinación no es la que da el texto para el riesgo de erosión.
+~Pendiente, uso del suelo y densidad de población #Incorrecto: la densidad de población no forma parte de este ejemplo según el texto.
+~Cobertura vegetal, capacidad hidráulica y tipo de calle #Incorrecto: esas variables corresponden al mapa de amenaza del ejemplo de aplicación real, no a este apartado.
+}
+
+::T3-S2-06:: ¿De qué depende, según el texto, un modelo de aptitud territorial? {
+=De jerarquizar zonas según criterios definidos por el equipo de trabajo #Correcto: es la definición exacta que da el texto para este ejemplo.
+~Exclusivamente de la resolución espacial del ráster de entrada #Incorrecto: el texto no reduce este ejemplo a una cuestión de resolución espacial.
+~De contar con una tabla de atributos detallada #Incorrecto: un ráster no tiene tabla de atributos, y el texto no plantea ese requisito para este ejemplo.
+~De convertir previamente todas las capas a formato vectorial #Incorrecto: el álgebra de mapas trabaja directamente sobre capas ráster, no exige convertirlas a vector.
+}
+
+::T3-S2-07:: {T#Incorrecto: el texto lo afirma explícitamente como una de las ventajas del álgebra de mapas frente al vector a esa escala.#Correcto: en efecto, el texto sostiene que a escala regional o continental el análisis vectorial queda limitado a consultas espaciales puntuales.} Según el texto, a escala regional o continental el análisis vectorial queda limitado a consultas espaciales puntuales.
+
+::T3-S2-08:: Según el cierre de este apartado, ¿cuál es el punto en común entre todos los ejemplos de uso del álgebra de mapas? {
+=Varias capas ráster, cada una representando una variable, se combinan mediante una expresión matemática para producir una capa de salida que sintetiza esa combinación en un único valor por píxel #Correcto: es la síntesis exacta con la que cierra el apartado el texto.
+~Todos los ejemplos requieren datos satelitales de alta resolución #Incorrecto: el texto no exige ese tipo de dato en particular para estos ejemplos.
+~Todos los ejemplos se resuelven con una sola capa de entrada #Incorrecto: el texto describe todos los ejemplos combinando varias capas, no una sola.
+~Todos los ejemplos dependen de tener conectividad a internet para procesarse #Incorrecto: el texto no menciona ningún requisito de conectividad.
+}
+
+$CATEGORY: SIG III/Texto III – Álgebra de mapas/3. La sintaxis de la Calculadora Ráster en QGIS
+
+::T3-S3-01:: ¿Cómo se llama, según el texto, la herramienta de QGIS para poner en práctica el álgebra de mapas? {
+="Calculadora ráster" #Correcto: es el nombre exacto que usa el texto para esta herramienta.
+~"Editor de expresiones" #Incorrecto: ese no es el nombre que usa el texto para esta herramienta.
+~"Constructor de consultas" #Incorrecto: el constructor de consultas es una herramienta distinta, para filtrar entidades, no para álgebra de mapas.
+~"Panel de álgebra espacial" #Incorrecto: ese nombre no aparece en el texto.
+}
+
+::T3-S3-02:: En la sintaxis de la Calculadora Ráster, ¿qué indica el número que sigue al símbolo @ en una expresión como "ndvi_2024"@1? {
+=El número de banda de la capa que se va a usar #Correcto: es la explicación exacta que da el texto sobre la sintaxis "capa"@banda.
+~La cantidad de veces que se repite la operación #Incorrecto: el número no indica una repetición de la operación, sino la banda de la capa.
+~El orden en que se cargó la capa en el proyecto #Incorrecto: el texto no vincula ese número con el orden de carga de las capas.
+~La resolución espacial de la capa, en metros #Incorrecto: el número después de @ no representa una resolución espacial.
+}
+
+::T3-S3-03:: Cuando una capa tiene más de una banda, como una imagen satelital multiespectral, ¿cómo se referencia cada banda, según el texto? {
+=Cada banda se referencia por separado, por ejemplo "landsat_2022"@1 para la banda azul y "landsat_2022"@4 para el infrarrojo cercano #Correcto: es el ejemplo exacto que da el texto.
+~Todas las bandas se combinan automáticamente bajo un único número, @1 #Incorrecto: el texto explica que cada banda se referencia por separado, no que se combinen automáticamente.
+~Hace falta crear una capa nueva por cada banda antes de poder usarla #Incorrecto: el texto no describe ese paso adicional; alcanza con cambiar el número después de @.
+~Las bandas se referencian por su nombre de color, como "azul" o "infrarrojo", en vez de un número #Incorrecto: el texto usa un número de banda después de @, no un nombre de color.
+}
+
+::T3-S3-04:: Según el ejemplo del texto, ¿a qué banda corresponde "landsat_2022"@4? {
+=A la banda del infrarrojo cercano #Correcto: es el ejemplo exacto que da el texto para ese número de banda.
+~A la banda azul #Incorrecto: la banda azul es el ejemplo que da el texto para "landsat_2022"@1, no para @4.
+~A la banda del rojo #Incorrecto: el texto no da ese ejemplo para la banda 4.
+~A la banda térmica #Incorrecto: el texto no menciona una banda térmica en este ejemplo.
+}
+
+::T3-S3-05:: ¿Cuál de las siguientes es la expresión que da el texto como ejemplo de multiplicación por una constante en la Calculadora Ráster? {
+="ndvi_2024"@1 * 100 #Correcto: es el ejemplo exacto que da el texto.
+~"pendiente"@1 + "uso_suelo"@1 #Incorrecto: esa expresión es el ejemplo de suma entre capas que da el texto, no de multiplicación por una constante.
+~"humedad"@1 / "combustible"@1 #Incorrecto: esa expresión es el ejemplo de división entre capas que da el texto.
+~"ndvi_2024"@1 * "pendiente"@1 #Incorrecto: esa expresión multiplicaría dos capas entre sí, no una capa por una constante; el texto no la usa como ejemplo.
+}
+
+::T3-S3-06:: ¿Cuál de las siguientes NO es uno de los tres ejemplos de expresiones que da el texto en este apartado sobre la sintaxis de la Calculadora Ráster? {
+=Resta entre dos capas #Correcto: en este apartado el texto ejemplifica multiplicación por constante, suma entre capas y división entre capas; no incluye un ejemplo explícito de resta entre capas.
+~Multiplicación por una constante #Incorrecto: sí es uno de los tres ejemplos que da el texto en este apartado ("ndvi_2024"@1 * 100).
+~Suma entre capas #Incorrecto: sí es uno de los tres ejemplos que da el texto en este apartado ("pendiente"@1 + "uso_suelo"@1).
+~División entre capas #Incorrecto: sí es uno de los tres ejemplos que da el texto en este apartado ("humedad"@1 / "combustible"@1).
+}
+
+::T3-S3-07:: <img src="imagenes/T3_operacion_misteriosa_2.png" alt="Capa A, Capa B (con el mismo valor en las nueve celdas) y Resultado" style="max-width:520px"><br>La Capa B de la imagen tiene el mismo valor en las nueve celdas. ¿Qué operación se aplicó entre la Capa A y la Capa B para obtener el Resultado? {
+=Multiplicación por una constante #Correcto: como la Capa B vale 4 en todas sus celdas, multiplicarla por la Capa A equivale a multiplicar la Capa A por la constante 4 (por ejemplo, 2 × 4 \= 8 en la celda superior izquierda).
+~Suma entre capas #Incorrecto: si fuera una suma, la celda superior izquierda daría 2 + 4 \= 6, no 8 como muestra el Resultado.
+~División entre capas #Incorrecto: si fuera una división, la celda superior izquierda daría 2 / 4 \= 0.5, no el valor entero 8 que muestra el Resultado.
+~Resta entre capas #Incorrecto: si fuera una resta, la celda superior izquierda daría 2 − 4 \= −2, no 8 como muestra el Resultado.
+}
+
+::T3-S3-08:: Según el cierre de este apartado, ¿qué comparten todas las expresiones que se pueden armar con la sintaxis de la Calculadora Ráster? {
+=Todas aplican una operación celda a celda entre las capas involucradas #Correcto: es la conclusión exacta con la que cierra el apartado el texto.
+~Todas requieren exactamente tres capas de entrada #Incorrecto: el texto muestra ejemplos con una sola capa y una constante, y con dos capas, no exige siempre tres.
+~Todas producen como resultado un valor booleano (verdadero o falso) #Incorrecto: los ejemplos del texto en este apartado son operaciones aritméticas, no lógicas booleanas.
+~Todas requieren que las capas tengan la misma cantidad de bandas #Incorrecto: el texto no plantea ese requisito en este apartado.
+}
+
+::T3-S3-09:: {F#Incorrecto: el texto explica que cada capa se referencia por su nombre seguido de @ y un número de banda, no solo por su nombre.#Correcto: en efecto, el texto es explícito en que hace falta indicar también el número de banda después del símbolo @.} Según el texto, en la Calculadora Ráster alcanza con escribir el nombre de la capa entre comillas, sin indicar ningún número de banda.
+
+$CATEGORY: SIG III/Texto III – Álgebra de mapas/4. Jerarquización y ponderación: cuidado con la interpretación de resultados
+
+::T3-S4-01:: Según el texto, ¿para qué es útil la jerarquización de píxeles? {
+=Para identificar zonas con mayor o menor susceptibilidad frente a un fenómeno #Correcto: es la utilidad exacta que da el texto para esta aplicación.
+~Para convertir automáticamente un ráster categórico en un ráster continuo #Incorrecto: el texto no describe esa conversión como parte de la jerarquización de píxeles.
+~Para reducir el tamaño de archivo de una capa ráster #Incorrecto: el texto no vincula la jerarquización de píxeles con el tamaño del archivo.
+~Para eliminar automáticamente las celdas con NoData de una capa #Incorrecto: el texto no relaciona la jerarquización de píxeles con el manejo de NoData.
+}
+
+::T3-S4-02:: Según el texto, ¿en qué situación se necesita especial precaución interpretativa al aplicar álgebra de mapas? {
+=Al sumar capas que representan categorías distintas #Correcto: es la situación exacta que señala el texto como fuente de ambigüedad.
+~Al multiplicar una capa por un número negativo #Incorrecto: el texto no plantea este caso como el problema central del apartado.
+~Al trabajar con capas de distinta resolución espacial #Incorrecto: ese es un problema de alineación, desarrollado en otro texto, no el que señala este apartado.
+~Al usar más de tres capas en una misma expresión #Incorrecto: el texto no vincula la cantidad de capas con este problema de interpretación.
+}
+
+::T3-S4-03:: En el ejemplo del texto (pendiente de 0 a 2, uso del suelo de 1 a 4), ¿cuáles de las siguientes combinaciones dan un resultado de 4 al sumarlas de forma simple? {
+~%33.33333%Pendiente 0 más uso 4 #Correcto: es una de las tres combinaciones que da el texto para el resultado ambiguo 4.
+~%33.33333%Pendiente 1 más uso 3 #Correcto: es otra de las tres combinaciones que da el texto para el resultado ambiguo 4.
+~%33.33333%Pendiente 2 más uso 2 #Correcto: es la tercera combinación que da el texto para el resultado ambiguo 4.
+~%-100%Pendiente 2 más uso 4 #Incorrecto: esa combinación suma 6, no 4; no es una de las tres que menciona el texto.
+~%-100%Pendiente 0 más uso 1 #Incorrecto: esa combinación suma 1, no 4; no es una de las tres que menciona el texto.
+}
+
+::T3-S4-04:: Según el texto, ¿qué pérdida implica la ambigüedad de sumar capas categóricas sin cuidado? {
+=Una pérdida real de contexto en la interpretación, porque un mismo valor final puede esconder combinaciones muy distintas #Correcto: es la consecuencia exacta que describe el texto.
+~Una pérdida de resolución espacial en la capa resultante #Incorrecto: el texto no describe una pérdida de resolución espacial en este problema.
+~Una pérdida de la georreferenciación del ráster #Incorrecto: el texto no vincula este problema con la georreferenciación.
+~Una pérdida del valor NoData original de las capas #Incorrecto: el texto no relaciona esta ambigüedad con el valor NoData.
+}
+
+::T3-S4-05:: ¿Qué estrategia propone el texto para evitar la ambigüedad al sumar capas categóricas? {
+=Multiplicar una de las capas por 10 o por 100 antes de sumarla, para conservar la trazabilidad de cada componente #Correcto: es la estrategia exacta que propone el texto.
+~Convertir ambas capas a valores booleanos antes de sumarlas #Incorrecto: el texto no propone esa conversión como solución a este problema.
+~Redondear los valores de ambas capas al número entero más cercano #Incorrecto: el texto no propone un redondeo como solución.
+~Aplicar un filtro focal a las capas antes de sumarlas #Incorrecto: los filtros y la estadística focal se mencionan en otro apartado, no como solución a este problema de trazabilidad.
+}
+
+::T3-S4-06:: En el ejemplo del texto, con la expresión "pendiente"@1 * 10 + "uso_suelo"@1, ¿cómo se interpreta directamente un valor final de 21? {
+=Pendiente \= 2 (alto) y uso del suelo \= 1 #Correcto: es la lectura exacta que da el texto para ese valor final.
+~Pendiente \= 1 y uso del suelo \= 2 #Incorrecto: esa lectura invierte el orden; en la expresión del texto la pendiente es la que se multiplica por 10.
+~Pendiente \= 21 y uso del suelo \= 0 #Incorrecto: el valor 21 se descompone como 2 y 1, no como 21 y 0.
+~El resultado es ambiguo, igual que en la suma simple #Incorrecto: el texto explica que, gracias a la multiplicación por 10, el valor 21 se puede leer sin ambigüedad posible.
+}
+
+::T3-S4-07:: ¿Qué logra, además de resolver la trazabilidad, la expresión "uso_suelo"@1 + 2 * "pendiente"@1, según el texto? {
+=Aplicar una ponderación explícita, en la que la pendiente pesa el doble que el uso del suelo #Correcto: es la explicación exacta que da el texto sobre esta expresión.
+~Igualar el peso de ambas capas en el resultado final #Incorrecto: el texto explica que con esa expresión la pendiente pesa el doble, no que los pesos se igualan.
+~Eliminar la necesidad de categorizar las capas de entrada #Incorrecto: el texto no plantea que esta expresión evite la categorización previa de las capas.
+~Convertir el resultado final en un valor booleano #Incorrecto: el resultado sigue siendo un valor numérico jerarquizado, no un valor booleano.
+}
+
+::T3-S4-08:: {F#Incorrecto: el texto explica que ese mismo mecanismo, además de resolver la trazabilidad, sirve para aplicar ponderaciones explícitas entre capas.#Correcto: en efecto, el texto es explícito en que ese mecanismo también permite ponderar una capa por sobre otra.} Según el texto, multiplicar una capa por una constante antes de sumarla sirve únicamente para resolver el problema de la trazabilidad, y no tiene ninguna otra utilidad.
+
+::T3-S4-09:: <img src="imagenes/T3_operacion_misteriosa_3.png" alt="Pendiente, Uso de suelo, Resultado A y Resultado B, cuatro grillas de 3x3" style="max-width:560px"><br>La imagen combina una capa de Pendiente (0-2) y una de Uso de suelo (1-4) de dos formas distintas, dando el Resultado A y el Resultado B. ¿Cuál de los dos resultados preserva la trazabilidad de cada componente dentro del valor final? {
+=Resultado B #Correcto: en el Resultado B cada valor se puede leer directamente como pendiente y uso del suelo (por ejemplo, 22 \= pendiente 2 y uso 2), porque surge de multiplicar la pendiente por 10 antes de sumar. En el Resultado A, en cambio, varias celdas distintas de entrada dan el mismo valor 4, perdiendo esa trazabilidad.
+~Resultado A #Incorrecto: en el Resultado A varias combinaciones distintas de pendiente y uso del suelo dan el mismo valor (4), la ambigüedad típica de una suma simple sin ponderar.
+~Ambos por igual #Incorrecto: solo uno de los dos resultados permite leer sin ambigüedad los componentes originales a partir del valor final.
+~Ninguno de los dos #Incorrecto: el Resultado B sí permite esa lectura sin ambigüedad, siguiendo el mecanismo que describe el texto.
+}
+
+::T3-S4-10:: ¿Qué aplicación del álgebra de mapas describe el texto como "una de las más potentes"? {
+=La jerarquización de píxeles #Correcto: es la aplicación que el texto describe con esas palabras al abrir el apartado.
+~La rasterización de datos vectoriales #Incorrecto: esa es la aplicación central del texto anterior, no de este apartado.
+~La compresión de archivos ráster #Incorrecto: el texto no describe la compresión como una aplicación del álgebra de mapas en este apartado.
+~La interconversión entre vector y ráster #Incorrecto: esa interconversión se desarrolla en el texto anterior, no como aplicación del álgebra de mapas acá.
+}
+
+$CATEGORY: SIG III/Texto III – Álgebra de mapas/5. Más allá del NDVI y la pendiente: el resto del repertorio de la asignatura
+
+::T3-S5-01:: Según el texto, ¿por qué resulta tentador asociar el álgebra de mapas únicamente con el NDVI o la pendiente? {
+=Porque son las variables que se vienen arrastrando de PDI y de Geografía Física, y las que más fácil resulta calcular #Correcto: es la explicación exacta que da el texto.
+~Porque son las únicas variables que admite la Calculadora Ráster de QGIS #Incorrecto: el texto no plantea ninguna limitación técnica de ese tipo.
+~Porque son las únicas variables categóricas que existen en un SIG #Incorrecto: ni el NDVI ni la pendiente son necesariamente categóricos, y el texto no hace esa afirmación.
+~Porque son las únicas variables que se pueden representar en formato ráster #Incorrecto: el texto desarrolla muchas otras variables ráster a lo largo de este apartado.
+}
+
+::T3-S5-02:: Según este apartado, ¿qué es el álgebra de mapas en relación con el resto de las técnicas de la asignatura? {
+=El mecanismo operativo que hace posible casi todas las técnicas que se van a ver en las próximas clases, no un fin en sí mismo #Correcto: es la definición exacta que da el texto en este apartado.
+~Una técnica alternativa que reemplaza a todas las demás #Incorrecto: el texto no plantea que el álgebra de mapas reemplace a las otras técnicas, sino que las hace posibles.
+~Una técnica optativa, útil solo para quienes no puedan usar interpolación espacial #Incorrecto: el texto no presenta al álgebra de mapas como una alternativa optativa.
+~Un tema que ya no se va a retomar en las próximas clases #Incorrecto: el texto dice justamente lo contrario, que va a aparecer detrás de casi todas las técnicas siguientes.
+}
+
+::T3-S5-03:: ¿Qué combinan los modelos de costo acumulado, según el texto? {
+=Capas de fricción del terreno, mediante las mismas operaciones celda a celda del álgebra de mapas #Correcto: es la explicación exacta que da el texto.
+~Únicamente capas categóricas de uso del suelo #Incorrecto: el texto habla de capas de fricción del terreno, no exclusivamente de uso del suelo.
+~Puntos de muestreo para generar una superficie continua #Incorrecto: esa es la descripción que da el texto sobre la interpolación espacial, no sobre los modelos de costo acumulado.
+~Vecindarios de píxeles en lugar de píxeles aislados #Incorrecto: esa es la descripción que da el texto sobre los filtros y la estadística focal.
+}
+
+::T3-S5-04:: Según el texto, ¿qué genera la interpolación espacial (IDW, Kriging, superficies de tendencia)? {
+=Capas ráster continuas a partir de puntos de muestreo #Correcto: es la explicación exacta que da el texto.
+~Capas categóricas a partir de una reclasificación previa #Incorrecto: esa descripción corresponde a la reclasificación, no a la interpolación espacial.
+~Una nueva capa vectorial a partir de una capa ráster #Incorrecto: la interpolación descripta genera una capa ráster, no una vectorial.
+~Un mapa de pendientes a partir de un modelo digital de elevación #Incorrecto: ese cálculo de pendiente no es el que describe el texto para la interpolación espacial.
+}
+
+::T3-S5-05:: ¿Qué hacen los filtros y la estadística focal, a diferencia de los operadores vistos hasta ese punto del texto? {
+=Aplican estas operaciones a vecindarios de píxeles en lugar de a píxeles aislados #Correcto: es la distinción exacta que hace el texto.
+~Solo pueden aplicarse sobre capas vectoriales, nunca sobre ráster #Incorrecto: el texto describe estos filtros como operaciones sobre rásteres, no sobre vectores.
+~Eliminan automáticamente las celdas NoData de la capa #Incorrecto: el texto no describe esa función para los filtros y la estadística focal.
+~Solo se pueden aplicar después de rasterizar una capa vectorial #Incorrecto: el texto no restringe estos filtros a capas recién rasterizadas.
+}
+
+::T3-S5-06:: Según el texto, ¿para qué sirve la reclasificación? {
+=Para reorganizar los valores de una capa como paso previo, muchas veces indispensable, antes de sumarla o ponderarla junto con otras #Correcto: es la definición exacta que da el texto.
+~Para cambiar automáticamente la resolución espacial de una capa #Incorrecto: el texto no describe ese efecto para la reclasificación.
+~Para convertir una capa ráster en una capa vectorial #Incorrecto: esa conversión es la vectorización, vista en el texto anterior, no la reclasificación.
+~Para eliminar del todo una de las capas de entrada de un análisis #Incorrecto: la reclasificación reorganiza valores, según el texto, no elimina capas completas.
+}
+
+::T3-S5-07:: {F#Incorrecto: el texto sostiene exactamente lo contrario: "un modelo de aptitud o de riesgo bien construido casi nunca se resuelve con una sola técnica".#Correcto: en efecto, el texto afirma que estos modelos casi nunca se resuelven con una sola técnica, sino combinando varias.} Según el cierre de este apartado, un modelo de aptitud o de riesgo bien construido casi siempre se resuelve con una sola técnica del repertorio de la asignatura.
+
+::T3-S5-08:: Según el cierre de este apartado, ¿qué rol cumple el álgebra de mapas respecto de las demás técnicas de análisis ráster? {
+=Es el lenguaje común que permite integrar varias técnicas distintas en un mismo modelo #Correcto: es la conclusión exacta con la que cierra el apartado el texto.
+~Es una técnica que compite con las demás, y hay que elegir solo una por proyecto #Incorrecto: el texto no plantea esa competencia; al contrario, describe cómo se integran entre sí.
+~Es un paso que solo se usa antes de comenzar cualquier otra técnica, nunca durante ni después #Incorrecto: el texto no restringe el álgebra de mapas a una etapa inicial exclusivamente.
+~Es una técnica en desuso, reemplazada por la interpolación espacial #Incorrecto: el texto no plantea que el álgebra de mapas esté en desuso ni sea reemplazada.
+}
+
+$CATEGORY: SIG III/Texto III – Álgebra de mapas/6. Un ejemplo de aplicación
+
+::T3-S6-01:: ¿Qué organismo elaboró el Mapa de Riesgo a Inundaciones del caso que describe el texto? {
+=El área de SIG de Obras Sanitarias Sociedad de Estado (OSSE) #Correcto: es el organismo exacto que menciona el texto.
+~El Instituto Geográfico Nacional (IGN) #Incorrecto: el texto no atribuye este caso al IGN.
+~Una universidad nacional, como parte de un proyecto de investigación #Incorrecto: el texto atribuye el caso a OSSE, un organismo de servicios públicos, no a una universidad.
+~Una empresa privada de seguros #Incorrecto: el texto no menciona ninguna empresa privada de seguros en este caso.
+}
+
+::T3-S6-02:: Según el texto, ¿para qué se elaboró el Mapa de Riesgo a Inundaciones? {
+=Para planificar futuros proyectos de agua y saneamiento en zonas propensas a anegamientos por lluvias recurrentes #Correcto: es el objetivo exacto que da el texto.
+~Para definir el trazado de una nueva línea de transporte público #Incorrecto: el texto no menciona ese objetivo para el caso.
+~Para calcular el valor catastral de los lotes de la zona #Incorrecto: el texto no vincula este caso con la valuación catastral.
+~Para clasificar automáticamente el tipo de cobertura vegetal de la ciudad #Incorrecto: ese no es el objetivo que da el texto para este caso.
+}
+
+::T3-S6-03:: ¿Qué dos capas intermedias combinó el equipo para construir el mapa final, según el texto? {
+=Un mapa de amenaza y un mapa de vulnerabilidad #Correcto: son las dos capas intermedias exactas que menciona el texto.
+~Un mapa de pendiente y un mapa de uso del suelo #Incorrecto: esas son las variables del ejemplo de susceptibilidad a inundación de otro apartado, no las capas intermedias de este caso real.
+~Un mapa de NDVI y un mapa de temperatura superficial #Incorrecto: el NDVI es solo una de las variables que integran el mapa de amenaza, no una de las dos capas intermedias finales.
+~Un mapa de riesgo y un mapa de resiliencia #Incorrecto: el texto no usa esos dos términos como las capas intermedias del caso.
+}
+
+::T3-S6-04:: ¿Cuáles de las siguientes variables integraron, según el texto, el mapa de amenaza del caso? {
+~%20%Altimetría del terreno #Correcto: es una de las variables del mapa de amenaza que menciona el texto.
+~%20%Cercanía a cursos de agua #Correcto: es otra de las variables del mapa de amenaza que menciona el texto.
+~%20%Cobertura vegetal, mediante un NDVI derivado de Sentinel-2 #Correcto: es otra de las variables del mapa de amenaza que menciona el texto.
+~%20%Capacidad hidráulica de la red pluvial #Correcto: es otra de las variables del mapa de amenaza que menciona el texto.
+~%20%Tipo de calle #Correcto: es la quinta variable del mapa de amenaza que menciona el texto.
+~%-100%Presencia de asentamientos precarios #Incorrecto: esa variable integra el mapa de vulnerabilidad, no el de amenaza, según el texto.
+}
+
+::T3-S6-05:: ¿Cuáles de las siguientes variables integraron, según el texto, el mapa de vulnerabilidad del caso? {
+~%25%Presencia de asentamientos precarios #Correcto: es una de las variables del mapa de vulnerabilidad que menciona el texto.
+~%25%Pobreza #Correcto: es otra de las variables del mapa de vulnerabilidad que menciona el texto.
+~%25%Densidad de población y de vivienda #Correcto: es otra de las variables del mapa de vulnerabilidad que menciona el texto.
+~%25%Calidad constructiva y cobertura de servicios de agua y cloaca #Correcto: es la cuarta variable (o grupo de variables) del mapa de vulnerabilidad que menciona el texto.
+~%-100%Cercanía a cursos de agua #Incorrecto: esa variable integra el mapa de amenaza, no el de vulnerabilidad, según el texto.
+~%-100%Tipo de calle #Incorrecto: esa variable también integra el mapa de amenaza, no el de vulnerabilidad, según el texto.
+}
+
+::T3-S6-06:: ¿Qué procedimiento técnico se aplicó en el caso, según el texto? {
+=Exactamente el de jerarquización ponderada desarrollado en el apartado anterior #Correcto: es la afirmación exacta que hace el texto al describir el procedimiento.
+~Una clasificación no supervisada por inteligencia artificial #Incorrecto: el texto no menciona ningún procedimiento de clasificación automática para este caso.
+~Una interpolación por Kriging entre estaciones meteorológicas #Incorrecto: el texto no describe una interpolación de este tipo en el procedimiento del caso.
+~Una vectorización manual de las zonas de riesgo #Incorrecto: el procedimiento que describe el texto es de jerarquización ponderada sobre capas ráster, no una vectorización manual.
+}
+
+::T3-S6-07:: Según el texto, ¿qué ponderación recibieron la presencia de asentamientos precarios y la pobreza, las variables de mayor incidencia? {
+=La ponderación más alta, 10 #Correcto: es el valor exacto que da el texto para estas dos variables.
+~La ponderación más baja, 1 #Incorrecto: el texto asigna la ponderación más baja a las variables de menor incidencia, no a estas dos.
+~Una ponderación de 100 #Incorrecto: ese valor no aparece en el texto para esta ponderación.
+~La misma ponderación que todas las demás variables #Incorrecto: el texto es explícito en que estas dos variables recibieron una ponderación distinta (más alta) que las de menor incidencia.
+}
+
+::T3-S6-08:: Según el texto, ¿qué hizo la Calculadora Ráster de QGIS en este caso, paso a paso? {
+=Multiplicó cada capa por su ponderación y sumó los resultados, primero dentro de cada mapa intermedio y después entre ambos #Correcto: es la descripción exacta del procedimiento que da el texto.
+~Sumó directamente todas las capas sin ponderación previa #Incorrecto: el texto describe una multiplicación por la ponderación antes de sumar, no una suma directa sin ponderar.
+~Promedió el valor de todas las capas de entrada #Incorrecto: el texto no describe un promedio simple entre las capas.
+~Aplicó un filtro focal a cada capa antes de combinarla con las demás #Incorrecto: el texto no menciona filtros focales en el procedimiento de este caso.
+}
+
+::T3-S6-09:: {F#Incorrecto: el texto sostiene exactamente lo contrario: que este caso muestra que el álgebra de mapas "no es un ejercicio abstracto de clase", sino una herramienta usada para decisiones reales.#Correcto: en efecto, el texto usa este caso para mostrar que el álgebra de mapas se aplica a decisiones concretas de infraestructura y planificación urbana.} Según el cierre del texto, el caso del Mapa de Riesgo a Inundaciones muestra que el álgebra de mapas es, en la práctica, un ejercicio abstracto sin aplicación real fuera del aula.
