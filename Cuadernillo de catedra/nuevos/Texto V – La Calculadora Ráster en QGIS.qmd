@@ -1,0 +1,73 @@
+---
+title: "Texto V – La Calculadora Ráster en QGIS"
+author: "Felipe Sodré Mendes Barros; Demian Lorán"
+lang: es
+bibliography: ../../references.bib
+csl: ../../apa.csl
+output-file: "Texto V – La Calculadora Ráster en QGIS"
+format:
+  docx: default
+  pdf: default
+---
+
+*Cátedra SIG III[^licencia]*
+
+[^licencia]:
+    {{< include ../../_licencia.md >}}
+
+En Texto III empezamos a usar la Calculadora Ráster de QGIS para sumar, multiplicar y dividir capas, y en este texto ampliamos ese repertorio con funciones trigonométricas, funciones estadísticas entre varias capas, y la sintaxis condicional explícita que la herramienta ofrece para construir máscaras y capas restrictivas. Corregimos de entrada una confusión heredada sobre qué tipo de operación ya vimos en Procesamiento Digital de Imágenes, aprendemos a convertir una capa de pendiente de grados a porcentaje con las funciones trigonométricas, combinamos varias capas con `min()`, `max()` y `sum()`, y desarrollamos con cuidado los operadores condicionales y la sintaxis `if()`, aplicando todo esto al mismo caso que van a resolver en la práctica siguiente: construir con la Calculadora Ráster una capa restrictiva de pendiente para evaluar qué zonas son aptas para instalar paneles solares. Cerramos con un ejemplo de aplicación real que usa la pendiente exactamente de esa manera, en un dominio bien distinto del de los índices espectrales de Procesamiento Digital de Imágenes.
+
+## Aritmética entre capas: lo que ya sabemos
+
+Texto III ya presentó la sintaxis básica de la Calculadora Ráster: cada capa se referencia como `"capa"@banda`, y las operaciones aritméticas (suma, resta, multiplicación, división) se aplican píxel a píxel entre capas, tal como vimos con el NDVI en Procesamiento Digital de Imágenes o con la jerarquización ponderada de pendiente y uso del suelo. No hace falta repetir ese desarrollo acá: alcanza con tenerlo presente como la base sobre la que se apoyan las funciones que siguen, que se escriben y se aplican del mismo modo pero cubren operaciones distintas: trigonométricas, estadísticas entre capas, y condicionales.
+
+## Funciones trigonométricas: de grados a porcentaje
+
+Vale la pena corregir acá una confusión frecuente, incluso entre quienes ya venimos usando la Calculadora Ráster: los índices espectrales como el NDVI que calculamos en Procesamiento Digital de Imágenes son operaciones aritméticas (restas, sumas, divisiones entre bandas), no trigonométricas, aunque alguna vez se los haya mencionado como si lo fueran. La trigonometría entra en juego recién cuando la Calculadora Ráster necesita trabajar con ángulos: las funciones `sin()`, `cos()` y `tan()` se aplican directamente sobre los valores de cada píxel, del mismo modo que cualquier otra función de la calculadora.
+
+Un uso frecuente es transformar una capa de pendiente expresada en grados (la que devuelve por defecto la herramienta Pendiente de QGIS) a pendiente en porcentaje. Acá conviene prestar atención a un detalle técnico que suele pasar desapercibido: las funciones trigonométricas de la Calculadora Ráster esperan el ángulo en radianes, no en grados, así que hay que convertirlo antes con `radians()`. La expresión completa, entonces, no es `tan("pendiente_grados"@1)` sino `tan(radians("pendiente_grados"@1)) * 100`. Sin la conversión a radianes el resultado es matemáticamente incorrecto, y sin la multiplicación por 100 el resultado queda expresado como proporción (0 a 1) y no como porcentaje. La @fig-T5-trig ilustra esta transformación sobre una grilla de ejemplo: a 45°, la pendiente en porcentaje da exactamente 100 %, un buen valor de referencia para verificar que la fórmula esté bien aplicada.
+
+![Transformación de una capa de pendiente en grados a pendiente en porcentaje mediante `tan(radians(pendiente)) * 100`. Fuente: Elaboración propia.](imagenes/T5_F1.png){#fig-T5-trig}
+
+## Funciones estadísticas entre capas: min, max, sum
+
+Además de las operaciones aritméticas y trigonométricas que ya vimos, la Calculadora Ráster ofrece funciones que resumen varias capas en una sola operación, sin necesidad de escribir una expresión larga con signos de suma o comparación repetidos. `min()` devuelve, en cada píxel, el valor más bajo entre todas las capas que se le pasan como argumento; `max()` devuelve el más alto; y `sum()` devuelve la suma de todas ellas (que también se podría escribir con el signo `+`, pero `sum()` es más cómoda cuando son muchas capas). Su sintaxis es `min("capa1"@1, "capa2"@1, "capa3"@1)`, y del mismo modo para `max()` y `sum()`.
+
+Estas funciones son especialmente útiles cuando ya se construyeron varias capas restrictivas booleanas (0 y 1, como las que vamos a ver en el próximo apartado) y se necesita combinarlas: `min()` entre varias capas booleanas exige que todas valgan 1 para que el resultado sea 1, el mismo efecto que un AND; `max()`, en cambio, alcanza con que una sola valga 1, el mismo efecto que un OR. `sum()`, a diferencia de las dos anteriores, no sirve para esto porque no distingue "todas" de "algunas": conviene reservarla para sumar valores numéricos que sí queremos acumular, como en la jerarquización ponderada que vimos en Texto III, no para combinar restricciones booleanas. La @fig-T5-estadisticas compara las tres funciones sobre las mismas tres capas de entrada.
+
+![Tres capas restrictivas booleanas combinadas con `min()`, `max()` y `sum()`: `min` solo da 1 donde las tres capas valen 1 a la vez (equivalente a un AND), `max` da 1 donde al menos una vale 1 (equivalente a un OR), y `sum` acumula un valor numérico entre 0 y 3 sin distinguir "todas" de "algunas". Fuente: Elaboración propia.](imagenes/T5_F2.png){#fig-T5-estadisticas}
+
+## Expresiones condicionales: comparadores e if() explícito
+
+Las expresiones condicionales, o lógicas, permiten construir máscaras y capas restrictivas evaluando si cada píxel cumple una condición. Los operadores de comparación disponibles son `=`, `!=`, `<`, `<=`, `>` y `>=`; el resultado siempre es una capa booleana, con 1 donde la condición se cumple y 0 donde no. En la práctica siguiente vamos a usar exactamente este mecanismo para construir una capa restrictiva de pendiente: identificar, con una sola expresión, los píxeles cuya pendiente es mayor o igual a 10 grados, uno de los criterios que se usan para descartar terreno demasiado inclinado para instalar paneles solares:
+
+`"pendiente"@1 >= 10`
+
+El resultado es una capa con 1 en los píxeles restringidos (pendiente igual o mayor a 10°) y 0 en el resto; para quedarnos con las zonas efectivamente aptas alcanza con invertir esa máscara en la práctica siguiente.
+
+Cuando en vez de una máscara booleana interesa conservar el valor original de la capa en los píxeles que cumplen la condición (por ejemplo, para poder inspeccionar después cuán inclinadas son las zonas restringidas, en vez de solo saber que lo están), hay dos formas equivalentes de escribirlo. La primera multiplica la máscara booleana por la capa original:
+
+`("pendiente"@1 >= 10) * "pendiente"@1`
+
+La segunda usa la función `if()`, que evalúa una condición y devuelve un valor distinto según el resultado sea verdadero o falso, con la sintaxis `if(condición, valor_si_verdadero, valor_si_falso)`:
+
+`if("pendiente"@1 >= 10, "pendiente"@1, 0)`
+
+Ambas expresiones producen exactamente el mismo resultado (0 donde la pendiente es menor a 10°, y el valor original de pendiente donde es mayor o igual), pero `if()` suele ser más legible cuando la expresión crece en complejidad, porque explicita la lógica de "si se cumple esto, hacé aquello" en vez de apoyarse en la aritmética de multiplicar por 0 o 1. La @fig-T5-condicional muestra las dos versiones sobre la misma capa de pendiente.
+
+![Máscara restrictiva de pendiente (`pendiente >= 10°`) y las dos formas equivalentes de preservar el valor original de pendiente en los píxeles restringidos: multiplicando por la máscara, o con `if()` explícito. Fuente: Elaboración propia.](imagenes/T5_F3.png){#fig-T5-condicional}
+
+El desarrollo conceptual completo de estos operadores (su relación con la teoría de conjuntos, los requisitos de alineación entre capas, cómo se comportan frente a valores Sin Dato) se retoma con más profundidad en Texto VI; por ahora alcanza con dominar la sintaxis que acabamos de ver para poder construir, en la práctica siguiente, la capa restrictiva de pendiente que sirve de punto de partida para evaluar dónde instalar paneles solares.
+
+## Un ejemplo de aplicación
+
+Un caso real que usa la pendiente exactamente de esta manera, aunque en un dominio bien distinto al de los índices espectrales de Procesamiento Digital de Imágenes, es el modelo de localización óptima de centrales solares fotovoltaicas de gran escala desarrollado por Quinteros y Morales [@quinteros2020fotovoltaicas] para la provincia del Azuay, en Ecuador. El estudio construye un Modelo de Aptitud a partir de cuatro subcriterios técnico-económicos (pendiente, radiación solar, cercanía a vías de comunicación y cercanía a redes eléctricas), cada uno clasificado en una escala de 0 (no adecuado) a 15 (altamente adecuado) y después normalizado entre 0 y 1. Para la pendiente en particular, el criterio es cercano al que vamos a usar en la práctica: los terrenos con pendiente mayor al 20 % reciben la calificación más baja, porque una pendiente pronunciada encarece la construcción de la central, mientras que los terrenos con pendiente entre 0 y 5 % reciben la calificación más alta.
+
+El paso siguiente, ya en el terreno de lo que vimos en Texto IV con la combinación lineal ponderada, es integrar los cuatro subcriterios asignándole un peso a cada uno según su importancia relativa (calculado con el mismo Proceso Analítico Jerárquico que trabajamos con Celemín) y sumando los resultados: MA = peso1 \* SC1 + peso2 \* SC2 + peso3 \* SC3 + peso4 \* SC4. Todo este geoprocesamiento, incluida la combinación final de las capas, se resolvió con la calculadora ráster de un SIG (ArcMap, en este caso, aunque el principio es idéntico al de QGIS). Los autores integran, además, este Modelo de Aptitud técnico-económico con un segundo Modelo de Impacto ambiental (que no vamos a desarrollar acá) para llegar a un modelo multicriterio completo, el mismo tipo de integración que van a encontrar formalizado en Texto VI.
+
+El resultado del estudio es modesto pero elocuente: sobre toda la provincia del Azuay, apenas dos sitios resultaron medianamente óptimos para instalar una central fotovoltaica de gran escala, lo que muestra que un criterio aparentemente simple como la pendiente puede ser, en la práctica, tan restrictivo como cualquier limitación legal o ambiental.
+
+## Referencias
+
+::: {#refs}
+:::
