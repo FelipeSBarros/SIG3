@@ -3,3 +3,6 @@
 
 /.quarto/
 __pycache__/
+
+# Juego/ - base de datos local del ranking (no versionar; ver Juego/README.md)
+Juego/*.db

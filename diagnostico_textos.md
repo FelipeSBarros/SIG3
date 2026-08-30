@@ -80,11 +80,27 @@ Contenido útil (aritmética, trigonométricas, condicionales con máscaras), pe
 - Podría ampliarse con funciones estadísticas (`min`, `max`, `sum` entre capas) y la sintaxis `if()`
   explícita de la Calculadora Ráster, hoy ausente pese a ser muy usada en clase.
 
+Actualización: ya resuelto en la versión `.qmd`. Además de corregir el error de redacción y sumar
+`min()`/`max()`/`sum()` e `if()`, Texto V absorbió también el contenido operativo que tenía Texto VI
+(AND/OR/NOT, relación con teoría de conjuntos, requisitos de alineamiento y Sin Dato, diferencia entre
+jerarquizar con `+` y filtrar con `AND`, y buenas prácticas al cierre) — ver nota en la entrada de Texto VI
+de abajo.
+
 ### Texto VI — Operaciones lógicas mono- y multicriterio sobre rásteres
 Muy completo: operadores de comparación, AND/OR/NOT, relación con teoría de conjuntos, requisitos de
 alineamiento entre capas, diferencia entre combinar con `+` (jerarquización) y con `AND` (filtro estricto),
 y buenas prácticas al cierre. Es el texto de mejor nivel del Cuadernillo — un buen modelo a imitar en
 estructura para los demás.
+
+Actualización: ese contenido operativo (AND/OR/NOT, conjuntos, alineamiento, Sin Dato, jerarquizar vs.
+filtrar, buenas prácticas) se mudó a Texto V al reescribirlo como `.qmd`, para no separar la sintaxis
+lógica de la aritmética/estadística/condicional que ya vive ahí y para no bloquear su numeración de clase
+(3b/4). El número VI y la clase correlativa (3b/4) se mantienen, pero al reescribirse como `.qmd` el texto
+pasa a cubrir lo que ya estaba proyectado más abajo como su ampliación natural: los métodos de evaluación
+multicriterio más flexibles que el booleano/WLC (Fuzzy, Bayesiano, Redes Neuronales, cap. 9 de Câmara et
+al./INPE), incluida la media ponderada ordenada (OWA) que Texto IV ya menciona sin desarrollar. El
+contenido original de este `.docx` puede tratarse como ya cubierto (vía Texto V) al momento de reescribir
+Texto VI.
 
 ### Texto VII — Alineación_Interpolación
 Como se señaló en el hallazgo transversal, es el gap más importante: solo cubre remuestreo/alineación
@@ -171,8 +187,8 @@ prosa; esta tabla es solo un mapa rápido para priorizar.
 | **Texto II** – Rasterización de datos vectoriales | Clase 1 (Rasterización, parte técnica) | Métodos y procesos de creación de ráster (Unidad II) | Valor de píxel (campo/valor fijo), resolución, extensión, NoData | Sin brechas bloqueantes — vectorización (camino inverso ráster→vector) queda como mejora futura no urgente |
 | **Texto III** – Álgebra de mapas | Clase 2 (Álgebra de mapas) | Conceptos y fundamentos del modelado espacial (Unidad II) | Operaciones celda a celda, jerarquización/ponderación, NDVI/ΔNDBI, puente hacia el resto de técnicas de la Unidad II, ejemplo de aplicación real citado (Montenegro et al., 2021) | Sin brechas relevantes |
 | **Texto IV** – Artículos científicos y discurso referido | Clase 3a (Análisis de texto/Buzai) | Lectura académica aplicada al dominio ráster/SIG | Estructura IMRyD, funciones del discurso referido (bien explicado, pero genérico) | Ejemplo propio del dominio ráster/SIG (p. ej. citando papers ya usados en Texto IX/X) |
-| **Texto V** – Calculadora Ráster en QGIS | Clases 3b/4 (mono/multicriterio, uso de calculadora) | Manipulación de ráster: cálculos (Unidad II) | Aritmética, trigonométricas, condicionales con máscaras | Corregir error de redacción ("trigonométricas" en la sección de aritmética); sumar funciones estadísticas (`min`/`max`/`sum`) y sintaxis `if()` explícita |
-| **Texto VI** – Operaciones lógicas mono- y multicriterio | Clases 3b/4 (mono/multicriterio) | Análisis ráster mono y multicriterio (Unidad III) | Comparación, AND/OR/NOT, teoría de conjuntos, alineamiento, jerarquización vs. filtro — texto de mejor nivel del Cuadernillo | Nada urgente; candidato a sumar Fuzzy/Bayesiano/Redes Neuronales (cap. 9 INPE) cuando se reescriba como `.qmd` |
+| **Texto V** – Calculadora Ráster en QGIS | Clases 3b/4 (mono/multicriterio, uso de calculadora) | Manipulación de ráster: cálculos (Unidad II) | Aritmética, trigonométricas, `min`/`max`/`sum`, condicionales con máscaras, `if()`, AND/OR/NOT, teoría de conjuntos, alineamiento, Sin Dato y jerarquización vs. filtro (contenido operativo de Texto VI ya absorbido) | Sin brechas relevantes |
+| **Texto VI** – (a reescribir como "Métodos avanzados de evaluación multicriterio") | Clases 3b/4 (mono/multicriterio) | Análisis ráster mono y multicriterio (Unidad III) | Todavía el `.docx` original (Operaciones lógicas mono- y multicriterio); su contenido operativo ya se cubre en Texto V | Reescribir enfocado en Fuzzy, Bayesiano y Redes Neuronales (cap. 9 INPE) y en formalizar la media ponderada ordenada (OWA) que Texto IV menciona sin desarrollar |
 | **Texto VII** – Alineación_Interpolación | Clases 5 (Alinear ráster) y 7 (Interpolación) | Alineación/remuestreo **y** interpolación espacial (IDW, Kriging, Spline/TIN) (Unidad II) | Solo remuestreo/alineación (vecino más próximo, bilineal, cúbico) | Interpolación espacial real — gap más importante del Cuadernillo, respaldado por Reflexiones 2025; dividir en dos textos |
 | **Texto VIII** – Compresión y pirámides | Sin clase dedicada en el cronograma (contenido de referencia) | Manipulación de ráster: formatos y compresión (Unidad II) | Compresión con/sin pérdida, algoritmos (PACKBITS, LZW, Deflate, ZSTD, LZMA, JPEG, LERC), pirámides/overviews | Sin brechas relevantes |
 | **Texto IX** – Estadística focal y Moving Window | Clase 8 (Filtros ráster / Moving Window) | Manipulación de ráster: filtros (Unidad II) | Máscara/kernel/convolución, tamaño de ventana, efectos de borde, ejemplos científicos citados | Sin brechas relevantes — nivel de referencia del Cuadernillo |
